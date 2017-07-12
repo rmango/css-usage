@@ -19,15 +19,18 @@ void function() {
 
             //var browsers = ["internet explorer","ie","firefox","chrome","safari","edge", "opera"];
             for(var i = 0; i < browsers.length; i++) {
-                if(browsers[i].str.test(element.getAttribute("alt").toString())) {
-                    results[browsers[i].name] = results[browsers[i].str] || {count: 0};
-                    results[browsers[i].name].count++;
+                if(element.getAttribute("alt") != null) {
+                    if(browsers[i].str.test(element.getAttribute("alt").toString())) {
+                        results[browsers[i].name] = results[browsers[i].str] || {count: 0};
+                        results[browsers[i].name].count++;
+                    }
                 }
-                if(browsers[i].str.test(element.getAttribute("src").toString())) {
-                    results[browsers[i].name] = results[browsers[i].str] || {count: 0};
-                    results[browsers[i].name].count++;
+                if(element.getAttribute("src") != null) {
+                    if(browsers[i].str.test(element.getAttribute("src").toString())) {
+                        results[browsers[i].name] = results[browsers[i].str] || {count: 0};
+                        results[browsers[i].name].count++;
+                    }
                 }
-            
             }   
         }
 
