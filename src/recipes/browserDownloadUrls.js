@@ -25,8 +25,8 @@ void function() {
                     results[linkList[j].name].count++;
                 }
             }
-            if (element.src != null) {
-                if(element.src.indexOf(linkList[j].url) != -1 ) {
+            if (element.getAttribute("src") != null) {
+                if(element.getAttribute("src").indexOf(linkList[j].url) != -1 ) {
                     results[linkList[j].name] = results[linkList[j].name] || {count: 0};
                     results[linkList[j].name].count++;
                 }
