@@ -1631,9 +1631,16 @@ void function() {
                         {str:supportedPhraseString, name:"supportedPhrase"}];;
 
         for(var i = 0; i < needles.length; i++) {
-            if((needles[i].str).test(element.textContent)) {
-                results[needles[i].name] = results[needles[i].name] || {count: 0};
+            var matches = element.textContent.match(needles[i].str);
+            
+            if(matches !== null) {
+                results[needles[i].name] = results[needles[i].name] || {count: 0, values: []};
                 results[needles[i].name].count++;
+
+                for(var m = 0; m < matches.length; m++) {
+                    results[needles[i].name].values[matches[m]] = results[needles[i].name].values[matches[m]] || {count: 0};
+                    results[needles[i].name].values[matches[m]].count++;
+                }
             }
         }
         
@@ -1641,33 +1648,6 @@ void function() {
     });
 }();
 
-
-/* 
-    RECIPE: z-index on static flex items
-    -------------------------------------------------------------
-    Author: Francois Remy
-    Description: Get count of flex items who should create a stacking context but do not really
-*/
-
-void function() {
-
-    window.CSSUsage.StyleWalker.recipesToRun.push( function zstaticflex(/*HTML DOM Element*/ element, results) {
-        if(!element.parentElement) return;
-
-        // the problem happens if the element is a flex item with static position and non-auto z-index
-        if(getComputedStyle(element.parentElement).display != 'flex') return results;
-        if(getComputedStyle(element).position != 'static') return results;
-        if(getComputedStyle(element).zIndex != 'auto') {
-            results.likely = 1;
-        }
-
-        // the problem might happen if z-index could ever be non-auto
-        if(element.CSSUsage["z-index"] && element.CSSUsage["z-index"].valuesArray.length > 0) {
-            results.possible = 1;
-        }
-
-    });
-}();
 
 //
 // This file is only here to create the TSV
