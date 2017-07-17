@@ -14,7 +14,7 @@ void function() {
                         {str:supportedPhraseString, name:"supportedPhrase"}];;
 
         for(var i = 0; i < needles.length; i++) {
-            var matches = element.textContent.match(needles[i].str);
+            var matches = element.cloneNode().textContent.match(needles[i].str);
             
             if(matches !== null) {
                 results[needles[i].name] = results[needles[i].name] || {count: 0, values: []};
