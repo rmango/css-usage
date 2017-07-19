@@ -1556,10 +1556,12 @@ void function() {
         {url:"https://support.microsoft.com/en-us/help/17621/internet-explorer-downloads", name:"InternetExplorer"}, 
         {url:"http://windows.microsoft.com/en-US/internet-explorer/downloads/ie", name:"InternetExplorer"}, 
         {url:"https://www.mozilla.org/en-US/firefox/", name:"Firefox"}, 
+        { url: "https://www.mozilla.org/en-US/firefox/?utm_medium=referral&utm_source=getfirefox-com", name: "Firefox" },
         {url:"https://www.apple.com/safari/", name:"Safari"}, 
         {url:"https://support.apple.com/en-us/HT204416", name:"Safari"},
         {url:"http://www.opera.com/download", name:"Opera"},
         {url:"https://www.microsoft.com/en-us/download/details.aspx?id=48126", name:"Edge"}];
+        
         for(var j = 0; j < linkList.length; j++) {
             if(element.getAttribute("href") != null) {
                 if(element.getAttribute("href").indexOf(linkList[j].url) != -1 ) {
@@ -1625,7 +1627,7 @@ void function() {
 void function() {
     window.CSSUsage.StyleWalker.recipesToRun.push( function unsupportedBrowser( element, results) {        
         //tests for phrases
-        var switchPhraseString = new RegExp("(Switch to|Get|Download|Install)(\\w|\\s)+(Google|Chrome|Safari|firefox|Opera|Internet Explorer|IE)","i");
+        var switchPhraseString = new RegExp("(Switch to|Get|Download|Install)(\\w|\\s)+(Google|Chrome|Safari|firefox|Opera|Internet Explorer|\\sIE)","i");
         var supportedPhraseString = new RegExp("(browser|Edge)(\\w|\\s)+(isn't|not|no longer)(\\w|\\s)+(supported|compatible)", "i");
         var needles = [{str:switchPhraseString, name:"switchPhrase"},
                         {str:supportedPhraseString, name:"supportedPhrase"}];;
