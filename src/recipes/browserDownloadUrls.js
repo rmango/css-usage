@@ -9,14 +9,22 @@
 void function() {
     window.CSSUsage.StyleWalker.recipesToRun.push( function browserDownloadUrls( element, results) {
         //tests for browser download urls
-        var linkList = [{url:"www.google.com/chrome/", name:"Chrome"}, 
-        {url:"www.google.com/intl/en/chrome/browser/desktop/index.html", name:"Chrome"},
-        {url:"support.microsoft.com/en-us/help/17621/internet-explorer-downloads", name:"InternetExplorer"}, 
-        {url:"windows.microsoft.com/en-US/internet-explorer/downloads/ie", name:"InternetExplorer"}, 
-        {url:"www.mozilla.org/en-US/firefox/", name:"Firefox"}, 
-        {url: "www.mozilla.org/en-US/firefox/?utm_medium=referral&utm_source=getfirefox-com", name:"Firefox"},
-        {url:"www.apple.com/safari/", name:"Safari"}, 
+        var linkList = [{url:"www.google.com/chrome", name:"Chrome"}, 
+        {url:"www.google.com/intl/en/chrome/browser", name:"Chrome"},
+        {url:"support.microsoft.com/en-us/help/17621/internet-explorer-downloads", name:"Internet Explorer"}, 
+        {url:"windows.microsoft.com/en-US/internet-explorer/downloads/ie", name:"Internet Explorer"}, 
+        {url:"windows.microsoft.com/en-us/internet-explorer/download-ie", name:"Internet Explorer"},
+        {url:"www.microsoft.com/windows/internet-explorer", name:"Internet Explorer"},
+        {url:"windows.microsoft.com/ie", name:"Internet Explorer"},
+        {url:"www.mozilla.org/en-US/firefox", name:"Firefox"}, 
+        {url:"www.getfirefox.com", name:"Firefox"},
+        {url:"www.mozilla.org/firefox", name:"Firefox"},
+        {url:"www.mozilla.com/firefox", name:"Firefox"},
+        {url:"www.firefox.com", name:"Firefox"},
+        {url:"www.apple.com/safari", name:"Safari"}, 
         {url:"support.apple.com/en-us/HT204416", name:"Safari"},
+        {url:"www.apple.com/support/mac-apps/safari", name:"Safari"},
+        {url:"support.apple.com/downloads/safari", name:"Safari"},
         {url:"www.opera.com/download", name:"Opera"},
         {url:"www.microsoft.com/en-us/download/details.aspx?id=48126", name:"Edge"}];
         

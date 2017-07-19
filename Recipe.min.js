@@ -1551,16 +1551,24 @@ void function() { try {
 void function() {
     window.CSSUsage.StyleWalker.recipesToRun.push( function browserDownloadUrls( element, results) {
         //tests for browser download urls
-        var linkList = [{url:"https://www.google.com/chrome/", name:"Chrome"}, 
-        {url:"https://www.google.com/intl/en/chrome/browser/desktop/index.html", name:"Chrome"},
-        {url:"https://support.microsoft.com/en-us/help/17621/internet-explorer-downloads", name:"InternetExplorer"}, 
-        {url:"http://windows.microsoft.com/en-US/internet-explorer/downloads/ie", name:"InternetExplorer"}, 
-        {url:"https://www.mozilla.org/en-US/firefox/", name:"Firefox"}, 
-        { url: "https://www.mozilla.org/en-US/firefox/?utm_medium=referral&utm_source=getfirefox-com", name: "Firefox" },
-        {url:"https://www.apple.com/safari/", name:"Safari"}, 
-        {url:"https://support.apple.com/en-us/HT204416", name:"Safari"},
-        {url:"http://www.opera.com/download", name:"Opera"},
-        {url:"https://www.microsoft.com/en-us/download/details.aspx?id=48126", name:"Edge"}];
+        var linkList = [{url:"www.google.com/chrome", name:"Chrome"}, 
+        {url:"www.google.com/intl/en/chrome/browser", name:"Chrome"},
+        {url:"support.microsoft.com/en-us/help/17621/internet-explorer-downloads", name:"Internet Explorer"}, 
+        {url:"windows.microsoft.com/en-US/internet-explorer/downloads/ie", name:"Internet Explorer"}, 
+        {url:"windows.microsoft.com/en-us/internet-explorer/download-ie", name:"Internet Explorer"},
+        {url:"www.microsoft.com/windows/internet-explorer", name:"Internet Explorer"},
+        {url:"windows.microsoft.com/ie", name:"Internet Explorer"},
+        {url:"www.mozilla.org/en-US/firefox", name:"Firefox"}, 
+        {url:"www.getfirefox.com", name:"Firefox"},
+        {url:"www.mozilla.org/firefox", name:"Firefox"},
+        {url:"www.mozilla.com/firefox", name:"Firefox"},
+        {url:"www.firefox.com", name:"Firefox"},
+        {url:"www.apple.com/safari", name:"Safari"}, 
+        {url:"support.apple.com/en-us/HT204416", name:"Safari"},
+        {url:"www.apple.com/support/mac-apps/safari", name:"Safari"},
+        {url:"support.apple.com/downloads/safari", name:"Safari"},
+        {url:"www.opera.com/download", name:"Opera"},
+        {url:"www.microsoft.com/en-us/download/details.aspx?id=48126", name:"Edge"}];
         
         for(var j = 0; j < linkList.length; j++) {
             if(element.getAttribute("href") != null) {
@@ -1578,79 +1586,6 @@ void function() {
         }
     });
 }();
-/* 
-    RECIPE: imgEdgeSearch
-    -------------------------------------------------------------
-    Author: Morgan, Lia, Joel, Malick
-    Description: Looking for sites that do not include edge as a supported browser
-*/
-
-void function() {
-    window.CSSUsage.StyleWalker.recipesToRun.push( function imgEdgeSearch( element, results) {
-        //tests for images
-        if(element.nodeName == "IMG") {
-            var browsers = [{str:(new RegExp("(internet(\\s|(\\-|\\_))?explorer|ie)", "i")), name:"Internet Explorer"}, 
-            {str:(new RegExp("chrome", "i")), name:"Chrome"},
-            {str:(new RegExp("firefox", "i")), name:"Firefox"},
-            {str:(new RegExp("safari", "i")), name:"Safari"},
-            {str:(new RegExp("edge", "i")), name:"Edge"},
-            {str:(new RegExp("opera", "i")), name:"Opera"}];
-
-
-            //var browsers = ["internet explorer","ie","firefox","chrome","safari","edge", "opera"];
-            for(var i = 0; i < browsers.length; i++) {
-                if(element.getAttribute("alt") != null) {
-                    if(browsers[i].str.test(element.getAttribute("alt").toString())) {
-                        results[browsers[i].name] = results[browsers[i].str] || {count: 0};
-                        results[browsers[i].name].count++;
-                    }
-                }
-                if(element.getAttribute("src") != null) {
-                    if(browsers[i].str.test(element.getAttribute("src").toString())) {
-                        results[browsers[i].name] = results[browsers[i].str] || {count: 0};
-                        results[browsers[i].name].count++;
-                    }
-                }
-            }   
-        }
-
-        return results;
-    });
-}();
-/* 
-    RECIPE: unsupported browser
-    -------------------------------------------------------------
-    Author: Morgan Graham, Lia Hiscock
-    Description: Looking for phrases that tell users that Edge is not supported, or to switch browers. 
-*/
-
-void function() {
-    window.CSSUsage.StyleWalker.recipesToRun.push( function unsupportedBrowser( element, results) {        
-        //tests for phrases
-        var switchPhraseString = new RegExp("(Switch to|Get|Download|Install)(\\w|\\s)+(Google|Chrome|Safari|firefox|Opera|Internet Explorer|\\sIE)","i");
-        var supportedPhraseString = new RegExp("(browser|Edge)(\\w|\\s)+(isn't|not|no longer)(\\w|\\s)+(supported|compatible)", "i");
-        var needles = [{str:switchPhraseString, name:"switchPhrase"},
-                        {str:supportedPhraseString, name:"supportedPhrase"}];;
-
-        for(var i = 0; i < needles.length; i++) {
-            var matches = element.textContent.match(needles[i].str);
-            
-            if(matches !== null) {
-                results[needles[i].name] = results[needles[i].name] || {count: 0, values: []};
-                results[needles[i].name].count++;
-
-                for(var m = 0; m < matches.length; m++) {
-                    results[needles[i].name].values[matches[m]] = results[needles[i].name].values[matches[m]] || {count: 0};
-                    results[needles[i].name].values[matches[m]].count++;
-                }
-            }
-        }
-        
-        return results;
-    });
-}();
-
-
 //
 // This file is only here to create the TSV
 // necessary to collect the data from the crawler
