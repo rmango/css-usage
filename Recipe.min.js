@@ -1556,10 +1556,12 @@ void function() {
                         {str:supportedPhraseString, name:"supportedPhrase"}];
 
         var testEl = element.cloneNode(true);
-        var childArr = testEl.children;
-        var m = childArr.length;
-        for (var j = m - 1; j >= 0; j--){
-            testEl.removeChild(childArr[j]);
+        if(testEl.hasChildNodes()) {
+            var childArr = testEl.children;
+            var m = childArr.length;
+            for (var j = m - 1; j >= 0; j--){
+                testEl.removeChild(childArr[j]);
+            }
         }
         
         for(var i = 0; i < needles.length; i++) {
