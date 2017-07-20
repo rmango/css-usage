@@ -8,16 +8,18 @@
 void function() {
     window.CSSUsage.StyleWalker.recipesToRun.push( function unsupportedBrowser( element, results) {        
         //tests for phrases
-        var switchPhraseString = new RegExp("(Switch to|Get|Use|Download|Install|Upgrad)((\\w|\\s)+)?(Chrome|Safari|firefox|Opera|Internet Explorer|\\sIE)[^\\w]","gi"); //deleted google
+        var switchPhraseString = new RegExp("(Switch to|Get|Use|Download|Install|Upgrad)((\\w|\\s)+)?(Chrome|Safari|firefox|Opera|Internet Explorer|\\sIE)","gi");
         var supportedPhraseString = new RegExp("(browser|Edge)(\\w|\\s)+(isn't|not|no longer)(\\w|\\s)+(supported|compatible)", "gi");
         var needles = [{str:switchPhraseString, name:"switchPhrase"},
                         {str:supportedPhraseString, name:"supportedPhrase"}];
 
         var testEl = element.cloneNode(true);
-        var childArr = testEl.children;
-        var m = childArr.length;
-        for (var j = m - 1; j >= 0; j--){
-            testEl.removeChild(childArr[j]);
+        if(testEl.hasChildNodes()) {
+            var childArr = testEl.children;
+            var m = childArr.length;
+            for (var j = m - 1; j >= 0; j--){
+                testEl.removeChild(childArr[j]);
+            }
         }
         
         for(var i = 0; i < needles.length; i++) {
