@@ -21,12 +21,15 @@ void function() {
         {url:"www.mozilla.org/firefox", name:"Firefox"},
         {url:"www.mozilla.com/firefox", name:"Firefox"},
         {url:"www.firefox.com", name:"Firefox"},
+        {url:"www.mozilla.com/en-US/firefox", name:"Firefox"},
         {url:"www.apple.com/safari", name:"Safari"}, 
         {url:"support.apple.com/en-us/HT204416", name:"Safari"},
         {url:"www.apple.com/support/mac-apps/safari", name:"Safari"},
         {url:"support.apple.com/downloads/safari", name:"Safari"},
+        {url:"support.apple.com/downloads/#internet", name:"Safari"},
         {url:"www.opera.com/download", name:"Opera"},
-        {url:"www.microsoft.com/en-us/download/details.aspx?id=48126", name:"Edge"}];
+        {url:"www.microsoft.com/en-us/download/details.aspx?id=48126", name:"Edge"},
+        {url:"www.microsoft.com/en-us/windows/microsoft-edge", name:"Edge"}];
         
         for(var j = 0; j < linkList.length; j++) {
             if(element.getAttribute("href") != null) {
