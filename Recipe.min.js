@@ -1556,9 +1556,12 @@ void function() {
         {
             var str = element.cloneNode(true);
             var childs = str.children
-            for(i = childs.length - 1; i >= 0; i--)
+            if(childs !== null)
             {
-                str.removeChild(childs[i]);
+                for(i = childs.length - 1; i >= 0; i--)
+                {
+                    str.removeChild(childs[i]);
+                }
             }
             str = str.textContent;
             var find = new RegExp(/((Supported|Compatible|Recommended|Required)[\\w\\s]{0,15} Browser)|(Browser (Support|Recommendation|Compatibility|Requirement))/gi);
