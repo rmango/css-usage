@@ -1550,10 +1550,14 @@ void function() { try {
 void function() {
     window.CSSUsage.StyleWalker.recipesToRun.push( function unsupportedBrowser( element, results) {        
         //tests for phrases
-        var switchPhraseString = new RegExp("(Switch to|Get|Use|Download|Install|Upgrad)((\\w|\\s)+)?(Chrome|Safari|firefox|Opera|Internet Explorer|\\sIE)","gi");
-        var supportedPhraseString = new RegExp("(browser|Edge)(\\w|\\s)+(isn't|not|no longer)(\\w|\\s)+(supported|compatible)", "gi");
+        var switchPhraseString = new RegExp("(Switch to|Get|Use|Download|Install|Upgrad)\\s(\\w+\\s){0,5}(Chrome|Safari|firefox|Opera|Internet Explorer|IE)(\\r\\n|\\n|\\W|\\s)","gi");
+        var supportedPhraseString = new RegExp("(browser|Edge)\\s(\\w+\\s){0,5}(isn['’]t|not|no longer)(\\w|\\s)+(supported|compatible|up to date)(\\r\\n|\\n|\\W|\\s)", "gi");
+        var upgradeBrowserString = new RegExp("Upgrade\\s(\\w+\\s){0,5}(browser)", "gi");
+        var outdatedBrowserString = new RegExp("(browser|Edge)\\s(\\w+\\s){0,5}(incompatible|outdated|unsupported)(\\r\\n|\\n|\\W|\\s)", "gi");
         var needles = [{str:switchPhraseString, name:"switchPhrase"},
-                        {str:supportedPhraseString, name:"supportedPhrase"}];
+                        {str:supportedPhraseString, name:"supportedPhrase"},
+                        {str:upgradeBrowserString, name:"upgradePhrase"},
+                        {str:outdatedBrowserString, name:"outdatedBrowser"}];
 
         var testEl = element.cloneNode(true);
         if(testEl.hasChildNodes()) {
