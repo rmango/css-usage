@@ -12,7 +12,7 @@ void function () {
         var phrasesString = phrases.join("|");
         var browsers = ["Chrome", "Safari", "Firefox", "Opera", "Internet Explorer", "IE"];
         var browsersString = browsers.join("|");
-        var switchPhraseString = new RegExp("(" + phrasesString + ")\\s(\\w+\\s){0,5}(?<!(for\s))(" + browsers + ")(\\r\\n|\\n|\\W|\\s)", "gi");
+        var switchPhraseString = new RegExp("(" + phrasesString + ")\\s(\\w+\\s){0,5}(" + browsersString + ")(\\r\\n|\\n|\\W|\\s)", "gi");
         var supportedPhraseString = new RegExp("(browser|Edge)\\s(\\w+\\s){0,5}(isn['’]t|not|no longer)(\\w|\\s)+(supported|compatible|up to date)(\\r\\n|\\n|\\W|\\s)", "gi");
         var upgradeBrowserString = new RegExp("Upgrade\\s(\\w+\\s){0,5}(browser)", "gi");
         var outdatedBrowserString = new RegExp("(browser|Edge)\\s(\\w+\\s){0,5}(incompatible|outdated|unsupported)(\\r\\n|\\n|\\W|\\s)", "gi");
@@ -33,7 +33,7 @@ void function () {
         for (var i = 0; i < needles.length; i++) {
             var matches = testEl.textContent.match(needles[i].str);
 
-            if (matches !== null) {
+            if (matches !== null && !matches.includes("for")) {
                 results[needles[i].name] = results[needles[i].name] || { count: 0, values: [] };
                 results[needles[i].name].count++;
 

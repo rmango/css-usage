@@ -1541,47 +1541,170 @@ void function() { try {
 } catch (ex) { /* do something maybe */ throw ex; } }();
 
 /* 
+    RECIPE: browserDownloadUrls
+    -------------------------------------------------------------
+    Author: Morgan, Lia, Joel, Malick
+    Description: Looks for the download urls of other browsers
+*/
+
+
+void function() {
+    window.CSSUsage.StyleWalker.recipesToRun.push( function browserDownloadUrls( element, results) {
+        //tests for browser download urls
+        var linkList = [{url:"https://www.google.com/chrome/", name:"Chrome"}, 
+        {url:"https://www.google.com/intl/en/chrome/browser/desktop/index.html", name:"Chrome"},
+        {url:"https://support.microsoft.com/en-us/help/17621/internet-explorer-downloads", name:"InternetExplorer"}, 
+        {url:"http://windows.microsoft.com/en-US/internet-explorer/downloads/ie", name:"InternetExplorer"}, 
+        {url:"https://www.mozilla.org/en-US/firefox/", name:"Firefox"}, 
+        {url:"https://www.apple.com/safari/", name:"Safari"}, 
+        {url:"https://support.apple.com/en-us/HT204416", name:"Safari"},
+        {url:"http://www.opera.com/download", name:"Opera"},
+        {url:"https://www.microsoft.com/en-us/download/details.aspx?id=48126", name:"Edge"}];
+        for(var j = 0; j < linkList.length; j++) {
+            if(element.getAttribute("href") != null) {
+                if(element.getAttribute("href").indexOf(linkList[j].url) != -1 ) {
+                    results[linkList[j].name] = results[linkList[j].name] || {count: 0};
+                    results[linkList[j].name].count++;
+                }
+            }
+            if (element.getAttribute("src") != null) {
+                if(element.getAttribute("src").indexOf(linkList[j].url) != -1 ) {
+                    results[linkList[j].name] = results[linkList[j].name] || {count: 0};
+                    results[linkList[j].name].count++;
+                }
+            }
+        }
+    });
+}();
+/* 
+    RECIPE: imgEdgeSearch
+    -------------------------------------------------------------
+    Author: Morgan, Lia, Joel, Malick
+    Description: Looking for sites that do not include edge as a supported browser
+*/
+
+void function() {
+    window.CSSUsage.StyleWalker.recipesToRun.push( function imgEdgeSearch( element, results) {
+        //tests for images
+        if(element.nodeName == "IMG") {
+            var browsers = [{str:(new RegExp("(internet(\\s|(\\-|\\_))?explorer|ie)", "i")), name:"Internet Explorer"}, 
+            {str:(new RegExp("chrome", "i")), name:"Chrome"},
+            {str:(new RegExp("firefox", "i")), name:"Firefox"},
+            {str:(new RegExp("safari", "i")), name:"Safari"},
+            {str:(new RegExp("edge", "i")), name:"Edge"},
+            {str:(new RegExp("opera", "i")), name:"Opera"}];
+
+
+            //var browsers = ["internet explorer","ie","firefox","chrome","safari","edge", "opera"];
+            for(var i = 0; i < browsers.length; i++) {
+                if(element.getAttribute("alt") != null) {
+                    if(browsers[i].str.test(element.getAttribute("alt").toString())) {
+                        results[browsers[i].name] = results[browsers[i].str] || {count: 0};
+                        results[browsers[i].name].count++;
+                    }
+                }
+                if(element.getAttribute("src") != null) {
+                    if(browsers[i].str.test(element.getAttribute("src").toString())) {
+                        results[browsers[i].name] = results[browsers[i].str] || {count: 0};
+                        results[browsers[i].name].count++;
+                    }
+                }
+            }   
+        }
+
+        return results;
+    });
+}();
+/* 
+    RECIPE: SupportedBrowserPage
+    -------------------------------------------------------------
+    Author: Malick Sere, Lia Hiscock, Joel Ramos, Morgan Graham
+    Description: This recipe looks for strings that would indicate that a page is a "supported browser" page.
+*/    
+
+
+
+void function() {
+    window.CSSUsage.StyleWalker.recipesToRun.push( function SupportedBrowserPage( element, results) {
+        
+        if(element.nodeName !== "HTML" && element.nodeName !== "SCRIPT" && element.nodeName !== "BODY" )
+        {
+            var str = element.cloneNode(true);
+            var childs = str.children
+            if(childs !== null)
+            {
+                for(i = childs.length - 1; i >= 0; i--)
+                {
+                    str.removeChild(childs[i]);
+                }
+            }
+            str = str.textContent;
+            var find = new RegExp(/((Supported|Compatible|Recommended|Required)[\\w\\s]{0,15} Browser)|(Browser (Support|Recommendation|Compatibility|Requirement))/gi);
+            var matches = str.match(find);
+            if(matches !== null)
+            {
+                results["browserPage"] = results["browserPage"] || {count: 0, values:[]};
+                results["browserPage"].count++;
+                for(var i = 0; i < matches.length; i++) 
+                {
+                    results["browserPage"].values[matches[i]] = results["browserPage"].values[matches[i]] || {count: 0};
+                    results["browserPage"].values[matches[i]].count++;
+                }
+                return results;
+            }
+        }   
+    });
+}();
+
+
+
+
+/* 
     RECIPE: unsupported browser
     -------------------------------------------------------------
     Author: Morgan Graham, Lia Hiscock
     Description: Looking for phrases that tell users that Edge is not supported, or to switch browers. 
 */
 
-void function() {
-    window.CSSUsage.StyleWalker.recipesToRun.push( function unsupportedBrowser( element, results) {        
+void function () {
+    window.CSSUsage.StyleWalker.recipesToRun.push(function unsupportedBrowser(element, results) {
         //tests for phrases
-        var switchPhraseString = new RegExp("(Switch to|Get|Use|Download|Install|Upgrad)\\s(\\w+\\s){0,5}(Chrome|Safari|firefox|Opera|Internet Explorer|IE)(\\r\\n|\\n|\\W|\\s)","gi");
+        var phrases = ["switch to", "switching to", "get", "getting", "use", "using", "download", "downloading", "install", "installing", "upgrade", "upgrading"];
+        var phrasesString = phrases.join("|");
+        var browsers = ["Chrome", "Safari", "Firefox", "Opera", "Internet Explorer", "IE"];
+        var browsersString = browsers.join("|");
+        var switchPhraseString = new RegExp("(" + phrasesString + ")\\s(\\w+\\s){0,5}(" + browsersString + ")(\\r\\n|\\n|\\W|\\s)", "gi");
         var supportedPhraseString = new RegExp("(browser|Edge)\\s(\\w+\\s){0,5}(isn['’]t|not|no longer)(\\w|\\s)+(supported|compatible|up to date)(\\r\\n|\\n|\\W|\\s)", "gi");
         var upgradeBrowserString = new RegExp("Upgrade\\s(\\w+\\s){0,5}(browser)", "gi");
         var outdatedBrowserString = new RegExp("(browser|Edge)\\s(\\w+\\s){0,5}(incompatible|outdated|unsupported)(\\r\\n|\\n|\\W|\\s)", "gi");
-        var needles = [{str:switchPhraseString, name:"switchPhrase"},
-                        {str:supportedPhraseString, name:"supportedPhrase"},
-                        {str:upgradeBrowserString, name:"upgradePhrase"},
-                        {str:outdatedBrowserString, name:"outdatedBrowser"}];
+        var needles = [{ str: switchPhraseString, name: "switchPhrase" },
+        { str: supportedPhraseString, name: "supportedPhrase" },
+        { str: upgradeBrowserString, name: "upgradePhrase" },
+        { str: outdatedBrowserString, name: "outdatedBrowser" }];
 
         var testEl = element.cloneNode(true);
-        if(testEl.hasChildNodes()) {
+        if (testEl.hasChildNodes()) {
             var childArr = testEl.children;
             var m = childArr.length;
-            for (var j = m - 1; j >= 0; j--){
+            for (var j = m - 1; j >= 0; j--) {
                 testEl.removeChild(childArr[j]);
             }
         }
-        
-        for(var i = 0; i < needles.length; i++) {
+
+        for (var i = 0; i < needles.length; i++) {
             var matches = testEl.textContent.match(needles[i].str);
-            
-            if(matches !== null) {
-                results[needles[i].name] = results[needles[i].name] || {count: 0, values: []};
+
+            if (matches !== null && !matches.includes("for")) {
+                results[needles[i].name] = results[needles[i].name] || { count: 0, values: [] };
                 results[needles[i].name].count++;
 
-                for(var m = 0; m < matches.length; m++) {
-                    results[needles[i].name].values[matches[m]] = results[needles[i].name].values[matches[m]] || {count: 0};
+                for (var m = 0; m < matches.length; m++) {
+                    results[needles[i].name].values[matches[m]] = results[needles[i].name].values[matches[m]] || { count: 0 };
                     results[needles[i].name].values[matches[m]].count++;
                 }
             }
         }
-        
+
         return results;
     });
 }();
