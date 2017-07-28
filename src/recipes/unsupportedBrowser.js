@@ -8,7 +8,7 @@
 void function() {
     window.CSSUsage.StyleWalker.recipesToRun.push( function unsupportedBrowser( element, results) {        
         //tests for phrases
-        var switchPhraseString = new RegExp("(Switch to|Get|Use|Download|Install|Upgrad)\\s(\\w+\\s){0,5}(Chrome|Safari|firefox|Opera|Internet Explorer|IE)(\\r\\n|\\n|\\W|\\s)","gi");
+        var switchPhraseString = new RegExp("(Switch to|Get|Use|Download|Install|Upgrad)\\s(\\w+\\s){0,5}[^(for\\s)](Chrome|Safari|firefox|Opera|Internet Explorer|IE)(\\r\\n|\\n|\\W|\\s)","gi");
         var supportedPhraseString = new RegExp("(browser|Edge)\\s(\\w+\\s){0,5}(isn['’]t|not|no longer)(\\w|\\s)+(supported|compatible|up to date)(\\r\\n|\\n|\\W|\\s)", "gi");
         var upgradeBrowserString = new RegExp("Upgrade\\s(\\w+\\s){0,5}(browser)", "gi");
         var outdatedBrowserString = new RegExp("(browser|Edge)\\s(\\w+\\s){0,5}(incompatible|outdated|unsupported)(\\r\\n|\\n|\\W|\\s)", "gi");
