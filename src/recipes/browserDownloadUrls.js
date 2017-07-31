@@ -22,7 +22,7 @@ void function() {
         {url:"www.mozilla.com/firefox", name:"Firefox"},
         {url:"www.firefox.com", name:"Firefox"},
         {url:"www.mozilla.com/en-US/firefox", name:"Firefox"},
-        {url: "https://www.mozilla.org/en-GB/firefox/new/", name:"Firefox"},
+        {url: "www.mozilla.org/en-GB/firefox/new/", name:"Firefox"},
         {url:"www.apple.com/safari", name:"Safari"}, 
         {url:"support.apple.com/en-us/HT204416", name:"Safari"},
         {url:"www.apple.com/support/mac-apps/safari", name:"Safari"},
