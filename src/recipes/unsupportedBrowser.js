@@ -12,10 +12,10 @@ void function () {
         var phrasesString = phrases.join("|");
         var browsers = ["Chrome", "Safari", "Firefox", "Opera", "Internet Explorer", "IE"];
         var browsersString = browsers.join("|");
-        var switchPhraseString = new RegExp("(//s|^)(" + phrasesString + ")\\s(\\w+\\s){0,5}(" + browsersString + ")(\\r\\n|\\n|\\W|\\s|$)", "gi");
-        var supportedPhraseString = new RegExp("(//s|^)(browser|Edge)\\s(\\w+\\s){0,5}(isn['’]t|not|no longer)(\\w|\\s)+(supported|compatible|up to date)(\\r\\n|\\n|\\W|\\s|$)", "gi");
-        var upgradeBrowserString = new RegExp("(//s|^)Upgrade\\s(\\w+\\s){0,5}(browser)(\\r\\n|\\n|\\W|\\s|$)", "gi");
-        var outdatedBrowserString = new RegExp("(//s|^)(browser|Edge)\\s(\\w+\\s){0,5}(incompatible|outdated|unsupported)(\\r\\n|\\n|\\W|\\s|$)", "gi");
+        var switchPhraseString = new RegExp("(\\s|^)(" + phrasesString + ")\\s(\\w+\\s){0,5}(" + browsersString + ")(\\r\\n|\\n|\\W|\\s|$)", "gi");
+        var supportedPhraseString = new RegExp("(\\s|^)(browser|Edge)\\s(\\w+\\s){0,5}(isn['’]t|not|no longer)(\\w|\\s)+(supported|compatible|up to date)(\\r\\n|\\n|\\W|\\s|$)", "gi");
+        var upgradeBrowserString = new RegExp("(\\s|^)Upgrade\\s(\\w+\\s){0,5}(browser)(\\r\\n|\\n|\\W|\\s|$)", "gi");
+        var outdatedBrowserString = new RegExp("(\\s|^)(browser|Edge)\\s(\\w+\\s){0,5}(incompatible|outdated|unsupported)(\\r\\n|\\n|\\W|\\s|$)", "gi");
         var needles = [{ str: switchPhraseString, name: "switchPhrase" },
         { str: supportedPhraseString, name: "supportedPhrase" },
         { str: upgradeBrowserString, name: "upgradePhrase" },
