@@ -1552,7 +1552,7 @@ void function () {
         //tests for phrases
         var phrases = ["switch to", "switching to", "get", "getting", "use", "using", "download", "downloading", "install", "installing", "upgrade", "upgrading"];
         var phrasesString = phrases.join("|");
-        var browsers = ["Chrome", "Safari", "Firefox", "Opera", "Internet Explorer", "IE"];
+        var browsers = ["Chrome", "Safari", "Firefox", "Opera", "Internet Explorer", "IE", "Chromium"];
         var browsersString = browsers.join("|");
         var switchPhraseString = new RegExp("(\\s|^)(" + phrasesString + ")\\s(\\w+\\s){0,5}(" + browsersString + ")(\\r\\n|\\n|\\W|\\s|$)", "gi");
         var supportedPhraseString = new RegExp("(\\s|^)(browser|Edge)\\s(\\w+\\s){0,5}(isn['’]t|not|no longer)(\\w|\\s)+(supported|compatible|up to date)(\\r\\n|\\n|\\W|\\s|$)", "gi");
