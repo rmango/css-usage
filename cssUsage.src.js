@@ -1562,15 +1562,15 @@ void function () {
         { str: supportedPhraseString, name: "supportedPhrase" },
         { str: upgradeBrowserString, name: "upgradePhrase" },
         { str: outdatedBrowserString, name: "outdatedBrowser" }];
-
+        
         var testEl = element.cloneNode(true);
         if (testEl.hasChildNodes()) {
-            var childArr = testEl.children;
-            var m = childArr.length;
-            for (var j = m - 1; j >= 0; j--) {
-                testEl.removeChild(childArr[j]);
-            }
-        }
+			var childArr = testEl.children !== undefined ? testEl.children : testEl.childNodes;
+			var m = childArr.length;
+			for (var j = m - 1; j >= 0; j--) {
+				testEl.removeChild(childArr[j]);
+			}
+		}
 
         for (var i = 0; i < needles.length; i++) {
             var matches = testEl.textContent.match(needles[i].str);
