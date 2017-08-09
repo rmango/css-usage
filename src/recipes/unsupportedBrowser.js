@@ -33,25 +33,29 @@ void function () {
         function isVisible(element)
         {
             //checks if width/height = 0
-            var width = element.getBoundingClientRect().width;
-            var height = element.getBoundingClientRect().height;
+            if(element.getBoundingClientRect() !== null){
+                var width = element.getBoundingClientRect().width;
+                var height = element.getBoundingClientRect().height;
 
-            if(width == 0 || height == 0)
-                return 0;
+                if(width == 0 || height == 0)
+                    return 0;
             
-            else
-                return 1;
-
             //checks for visibility with computed style
-            var elStyle = getComputedStyle(element);
-            if(elStyle.getPropertyValue("display") === "none") {
-                return 0;
-            } else if(elStyle.getPropertyValue("opacity") < 0.1) {
-                return 0;
-            } else if(elStyle.getPropertyValue("transform").includes(" 0,") || elStyle.getPropertyValue("transform").includes(" 0)")) {
-                return 0;
-            } else if(elStyle.getPropertyValue("visibility") === "hidden") {
-                return 0;
+                var elStyle = getComputedStyle(element);
+                if(elStyle.getPropertyValue("display") === "none"){
+                    return 0;
+                } 
+                else if(elStyle.getPropertyValue("opacity") < 0.1) {
+                    return 0;
+                } 
+                else if(elStyle.getPropertyValue("transform").includes(" 0,") || elStyle.getPropertyValue("transform").includes(" 0)")) {
+                    return 0;
+                } 
+                else if(elStyle.getPropertyValue("visibility") === "hidden") {
+                    return 0;
+                }
+            
+                return 1;
             }
         }
 
@@ -69,8 +73,8 @@ void function () {
                 }
                 
                 //checks if is visible on page
-                results[needles[i].name].visibility = results[needles[i].name].visibility || { count: 0 };
-                results[needles[i].name].visibility = isVisible();
+                    //results[needles[i].name].visibility = results[needles[i].name].visibility || { 0 };
+                    results[needles[i].name].visibility = isVisible();
 
             }
         }
