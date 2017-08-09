@@ -42,6 +42,26 @@ void function () {
                         results[needles[i].name].values[matches[m]].count++;
                     }
                 }
+
+                //checks for element's visibility on page
+                var visible = true;
+                var elStyle = getComputedStyle(element);
+
+                if(elStyle.getPropertyValue("display") === "none") {
+                    visible = false;
+                } else if(elStyle.getPropertyValue("opacity") < 0.1) {
+                    visible = false;
+                } else if(elStyle.getPropertyValue("transform").includes(" 0,") || elStyle.getPropertyValue("transform").includes(" 0)")) {
+                    visible = false;
+                } else if(elStyle.getPropertyValue("visibility") === "hidden") {
+					visible = false;
+				}
+
+                if(visible){
+                    results[needles[i].name].visibility = 1;
+                } else {
+                    results[needles[i].name].visibility = 0;
+                }
             }
         }
 
