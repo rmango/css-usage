@@ -1571,11 +1571,36 @@ void function () {
 				testEl.removeChild(childArr[j]);
 			}
 		}
+        
+        function isVisible(element)
+        {
+            //checks if width/height = 0
+            var width = element.getBoundingClientRect().width;
+            var height = element.getBoundingClientRect().height;
+
+            if(width == 0 || height == 0)
+                return 0;
+            
+            else
+                return 1;
+
+            //checks for visibility with computed style
+            var elStyle = getComputedStyle(element);
+            if(elStyle.getPropertyValue("display") === "none") {
+                return 0;
+            } else if(elStyle.getPropertyValue("opacity") < 0.1) {
+                return 0;
+            } else if(elStyle.getPropertyValue("transform").includes(" 0,") || elStyle.getPropertyValue("transform").includes(" 0)")) {
+                return 0;
+            } else if(elStyle.getPropertyValue("visibility") === "hidden") {
+                return 0;
+            }
+        }
 
         for (var i = 0; i < needles.length; i++) {
             var matches = testEl.textContent.match(needles[i].str);
             if (matches !== null) {
-                results[needles[i].name] = results[needles[i].name] || { count: 0, values: [] };
+                results[needles[i].name] = results[needles[i].name] || { count: 0, values: [], visibility: null };
                 results[needles[i].name].count++;
 
                 for (var m = 0; m < matches.length; m++) {
@@ -1584,26 +1609,10 @@ void function () {
                         results[needles[i].name].values[matches[m]].count++;
                     }
                 }
+                
+                //checks if is visible on page
+                results[needles[i].name].visibility = isVisible();
 
-                //checks for element's visibility on page
-                var visible = true;
-                var elStyle = getComputedStyle(element);
-
-                if(elStyle.getPropertyValue("display") === "none") {
-                    visible = false;
-                } else if(elStyle.getPropertyValue("opacity") < 0.1) {
-                    visible = false;
-                } else if(elStyle.getPropertyValue("transform").includes(" 0,") || elStyle.getPropertyValue("transform").includes(" 0)")) {
-                    visible = false;
-                } else if(elStyle.getPropertyValue("visibility") === "hidden") {
-					visible = false;
-				}
-
-                if(visible){
-                    results[needles[i].name].visibility = 1;
-                } else {
-                    results[needles[i].name].visibility = 0;
-                }
             }
         }
 
