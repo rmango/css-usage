@@ -29,6 +29,18 @@ void function () {
 				testEl.removeChild(childArr[j]);
 			}
 		}
+        
+        function isVisible(element)
+        {
+            var width = element.getBoundingClientRect().width;
+            var height = element.getBoundingClientRect().height;
+
+            if(width == 0 || height == 0)
+                return 0;
+            
+            else
+                return 1;
+        }
 
         for (var i = 0; i < needles.length; i++) {
             var matches = testEl.textContent.match(needles[i].str);
