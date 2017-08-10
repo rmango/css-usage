@@ -58,19 +58,14 @@ void function () {
 
             // if text is within an iframe that does not appear: <iframe frameBorder="0" src="">Browser not compatible.</iframe>
             var elAbove = element;
-            var visible = true;
             while(elAbove.parentElement !== null) {
                 if(elAbove.nodeName === "IFRAME") {
                     if(getComputedStyle(elAbove).getPropertyValue("src") === "" && getComputedStyle(elAbove).getPropertyValue("frameBorder") === 0) {
-                        visible = false;
+                        return 0;
                     }
                 }
                 elAbove = elAbove.parentElement;
             }
-            if(!visible) {
-                return 0;
-            }
-
             return 1;
         }
             
