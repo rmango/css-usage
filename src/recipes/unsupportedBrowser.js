@@ -55,10 +55,25 @@ void function () {
             else if(elStyle.getPropertyValue("visibility") === "hidden") {
                 return 0;
             }
-        
-            return 1;
 
+            // if text is within an iframe that does not appear: <iframe frameBorder="0" src="">Browser not compatible.</iframe>
+            var elAbove = element;
+            var visible = true;
+            while(elAbove.parentElement !== null) {
+                if(elAbove.nodeName === "IFRAME") {
+                    if(getComputedStyle(elAbove).getPropertyValue("src") === "" && getComputedStyle(elAbove).getPropertyValue("frameBorder") === 0) {
+                        visible = false;
+                    }
+                }
+                elAbove = elAbove.parentElement;
+            }
+            if(!visible) {
+                return 0;
+            }
+
+            return 1;
         }
+            
 
         for (var i = 0; i < needles.length; i++) {
             var matches = testEl.textContent.match(needles[i].str);
@@ -74,12 +89,11 @@ void function () {
                 }
                 
                 //checks if is visible on page
-                    //results[needles[i].name].visibility = results[needles[i].name].visibility || { 0 };
-                    results[needles[i].name].visibility = isVisible(element);
+                //results[needles[i].name].visibility = results[needles[i].name].visibility || { 0 };
+                results[needles[i].name].visibility = isVisible(element);
 
             }
         }
-
         return results;
     });
 }();
