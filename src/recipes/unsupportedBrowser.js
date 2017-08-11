@@ -32,14 +32,24 @@ void function () {
         
         function isVisible(element)
         {
-            //checks if width/height = 0
-            if(element.getBoundingClientRect() !== null){
-                var width = element.getBoundingClientRect().width;
-                var height = element.getBoundingClientRect().height;
-
-                if(width == 0 || height == 0)
-                    return 0;
-            }
+            //checks if width/height = 0 and left/top < 0
+            if (element.getBoundingClientRect() !== null) {
+                var box = element.getBoundingClientRect();
+                var docEl = document.documentElement;
+                var scrollTop = docEl.scrollTop;
+                var scrollLeft = docEl.scrollLeft;
+                var clientTop = docEl.clientTop;
+                var clientLeft = docEl.clientLeft;
+                var width = box.width;
+                var height = box.height;
+                var top = box.top + scrollTop - clientTop;
+                var left = box.left + scrollLeft - clientLeft;
+                var bottom = top + height;
+                var right = left + width;
+                if (width == 0 || height == 0 || bottom <= 0 || right <= 0) {
+                    return 0;
+                }
+            }
             
             //checks for visibility with computed style
             var elStyle = getComputedStyle(element);
@@ -58,22 +68,25 @@ void function () {
 
             // if text is within an iframe that does not appear: <iframe frameBorder="0" src="">Browser not compatible.</iframe>
             var elAbove = element;
-            while(elAbove.parentElement !== null) {
+            do {
+            //while(elAbove.parentElement !== null) {
                 if(elAbove.nodeName === "IFRAME") {
                     if(getComputedStyle(elAbove).getPropertyValue("src") === "" && getComputedStyle(elAbove).getPropertyValue("frameBorder") === 0) {
                         return 0;
                     }
                 }
-                elAbove = elAbove.parentElement;
-            }
+                if(elAbove.parenElement !== null) {
+                    elAbove = elAbove.parentElement;
+                }
+            //}
+            } while(elAbove.parentElement !== null);
             return 1;
         }
-            
 
         for (var i = 0; i < needles.length; i++) {
             var matches = testEl.textContent.match(needles[i].str);
             if (matches !== null) {
-                results[needles[i].name] = results[needles[i].name] || { count: 0, values: [], visibility: 1 };
+                results[needles[i].name] = results[needles[i].name] || { count: 0, values: [], visibility: 0};
                 results[needles[i].name].count++;
 
                 for (var m = 0; m < matches.length; m++) {
@@ -84,9 +97,9 @@ void function () {
                 }
                 
                 //checks if is visible on page
-                //results[needles[i].name].visibility = results[needles[i].name].visibility || { 0 };
-                results[needles[i].name].visibility = isVisible(element);
-
+                if(results[needles[i].name].visibility === 0) {
+                    results[needles[i].name].visibility = isVisible(element);
+                }
             }
         }
         return results;
