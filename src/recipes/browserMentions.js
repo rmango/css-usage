@@ -4,28 +4,24 @@
         Authors: Morgan, Lia, Malick, Joel
 */
 
-void function () {   
-        window.CSSUsage.StyleWalker.recipesToRun.push(function browserMentions(element, results) { 
-        var browsers = ("Opera(\s|\.)|Internet Explorer|Firefox|Chrome|Edge|Safari|IE");
-        var str = element.innerText(); 
-        if(str !== null) 
-            { 
-                if(str.includes(browsers))
-                    { 
-                        var matches = str.match(browsers); 
-                        if(matches !== null)
-                            {
-                                results["browser"] = results["browser"] || {count: 0, values: []};
-                                results["browser"].count++;
-                            }
+void function () {
+    window.CSSUsage.StyleWalker.recipesToRun.push(function browserMentions(element, results) {
+        var browsers = new RegExp(/(\s|^)(Opera|Internet Explorer|Firefox|Chrome|Edge|Safari|IE)(\r\n|\n|\W|\s|$)/gi);
+        var browsers2 = new RegExp(/(Opera|Internet Explorer|Firefox|Chrome|Edge|Safari|IE)/gi);
+        var str = element.textContent;
+        var matches = str.match(browsers);
+        if (matches !== null) {
+            results["browser"] = results["browser"] || { count: 0, values: [] };
+            results["browser"].count++;
 
-                            for (var x = 0; x < matches.length; x++)
-                                {
-                                    results["browser"] = results["browser"].values[matches[x]] || {count: 0};
-                                    results["browser"].values[matches[x]].count++;
-                                }
-                    } 
-            } 
-        return results; 
-    }); 
+
+            for (var x = 0; x < matches.length; x++) {
+                results["browser"].values[matches[x].match(browsers2)[0].toLowerCase()] = results["browser"].values[matches[x].match(browsers2)[0].toLowerCase()] || { count: 0 };
+                results["browser"].values[matches[x].match(browsers2)[0].toLowerCase()].count++;
+            }
+        }
+
+
+        return results;
+    });
 }();
