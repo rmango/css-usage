@@ -58,20 +58,6 @@ void function () {
         }
 
         //tests for images
-<<<<<<< HEAD:src/recipes/archive/imgEdgeSearch.js
-        if(element.nodeName == "IMG") {
-            var browsers = [{str:(new RegExp("(internet(\\s|(\\-|\\_))?explorer|ie)", "i")), name:"Internet Explorer"}, 
-            {str:(new RegExp("chrome", "i")), name:"Chrome"},
-            {str:(new RegExp("firefox", "i")), name:"Firefox"},
-            {str:(new RegExp("safari", "i")), name:"Safari"},
-            {str:(new RegExp("edge", "i")), name:"Edge"},
-            {str:(new RegExp("opera", "i")), name:"Opera"}];
-
-            for(var i = 0; i < browsers.length; i++) {
-                if(element.getAttribute("alt") != null) {
-                    if(browsers[i].str.test(element.getAttribute("alt").toString())) {
-                        results[browsers[i].name] = results[browsers[i].str] || {count: 0};
-=======
         if (element.nodeName == "IMG") {
             var browsers = [{ str: (new RegExp("(internet(\\s|(\\-|\\_))?explorer|(^|\\W)ie($|\\W))", "i")), name: "Internet Explorer" },
             { str: (new RegExp("chrome[^b|$]", "i")), name: "Chrome" },
@@ -86,7 +72,6 @@ void function () {
                         var altMatch = element.getAttribute("alt").match(browsers[i].str);
 
                         results[browsers[i].name] = results[browsers[i].name] || { count: 0, values: [], visibility: 0 };
->>>>>>> imgBranch:src/recipes/imgEdgeSearch.js
                         results[browsers[i].name].count++;
 
                         for (var j = 0; j < altMatch.length; j++) {
