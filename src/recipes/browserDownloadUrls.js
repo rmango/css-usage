@@ -84,29 +84,19 @@ void function() {
         {url:"www.opera.com/download", name:"Opera"},
         {url:"www.microsoft.com/en-us/download/details.aspx?id=48126", name:"Edge"},
         {url:"www.microsoft.com/en-us/windows/microsoft-edge", name:"Edge"}];*/
-        var linkList = [{url: (new RegExp("www\\.google\\.com((\\W|\\w)+)?/chrome", "i")), name:"Chrome"},
-        {url: (new RegExp("microsoft\\.com/((\\W|\\w)+)?(internet-explorer|ie)", "i")), name:"Internet Explorer"},
-        {url: (new RegExp("\\.(mozilla|getfirefox|firefox)\\.(org|com)", "i")), name:"Firefox"}, 
-        {url: (new RegExp("\\.apple\\.com", "i")), name:"Safari"}, 
-        {url: (new RegExp("\\.opera\\.com", "i")), name:"Opera"}];
+        var linkList = [{url: (new RegExp("google\\.com((\\W|\\w)+)?\/chrome", "i")), name:"Chrome"}, //but not support.google
+        {url: (new RegExp("microsoft\\.com\/((\\W|\\w)+)?(internet-explorer|ie)", "i")), name:"Internet Explorer"}, //but not answers. 
+        {url: (new RegExp("(mozilla|getfirefox|firefox)\\.(org|com)", "i")), name:"Firefox"}, //but not support.
+        {url: (new RegExp("apple\\.com", "i")), name:"Safari"}, //but not support.
+        {url: (new RegExp("opera\\.com", "i")), name:"Opera"}]; //but not help.
 
         for(var j = 0; j < linkList.length; j++) {
             if(element.getAttribute("href") != null) {
                 //if(element.getAttribute("href").indexOf(linkList[j].url) != -1 ) {
-                if(linkList[j].url.test(element.getAttribute("href"))) {
+                if(linkList[j].url.test(element.getAttribute("href")) && element.getAttribute("href").indexOf("answers") === -1) {
                     results[linkList[j].name] = results[linkList[j].name] || {count: 0, visibility:0};
                     results[linkList[j].name].count++;
                     //checks if is visible on page
-                    if(results[linkList[j].name].visibility === 0) {
-                        results[linkList[j].name].visibility = isVisible(element);
-                    }
-                }
-            }
-            if (element.getAttribute("src") != null) {
-                //if(element.getAttribute("src").indexOf(linkList[j].url) != -1 ) {
-                if(linkList[j].url.test(element.getAttribute("src"))) {
-                    results[linkList[j].name] = results[linkList[j].name] || {count: 0, visibility:0};
-                    results[linkList[j].name].count++;
                     if(results[linkList[j].name].visibility === 0) {
                         results[linkList[j].name].visibility = isVisible(element);
                     }
