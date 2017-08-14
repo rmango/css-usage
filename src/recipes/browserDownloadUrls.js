@@ -84,11 +84,11 @@ void function() {
         {url:"www.opera.com/download", name:"Opera"},
         {url:"www.microsoft.com/en-us/download/details.aspx?id=48126", name:"Edge"},
         {url:"www.microsoft.com/en-us/windows/microsoft-edge", name:"Edge"}];*/
-        var linkList = [{url: (new RegExp("google\\.com((\\W|\\w)+)?\/chrome", "i")), name:"Chrome"}, //but not support.google
-        {url: (new RegExp("microsoft\\.com\/((\\W|\\w)+)?(internet-explorer|ie)", "i")), name:"Internet Explorer"}, //but not answers. 
-        {url: (new RegExp("(mozilla|getfirefox|firefox)\\.(org|com)", "i")), name:"Firefox"}, //but not support.
-        {url: (new RegExp("apple\\.com", "i")), name:"Safari"}, //but not support.
-        {url: (new RegExp("opera\\.com", "i")), name:"Opera"}]; //but not help.
+        var linkList = [{url: (new RegExp("google\\.(\\w{0,4})((\\W|\\w)+)?\/chrome", "i")), name:"Chrome"}, //but not support.google
+        {url: (new RegExp("microsoft\\.(\\w{0,4})\/((\\W|\\w)+)?(internet-explorer|ie)", "i")), name:"Internet Explorer"}, //but not answers. 
+        {url: (new RegExp("(mozilla|getfirefox|firefox)\\.(\\w{0,4})", "i")), name:"Firefox"}, //but not support.
+        {url: (new RegExp("apple\\.(\\w{0,4})", "i")), name:"Safari"}, //but not support.
+        {url: (new RegExp("opera\\.(\\w{0,4})", "i")), name:"Opera"}]; //but not help.
 
         for(var j = 0; j < linkList.length; j++) {
             if(element.getAttribute("href") != null) {
