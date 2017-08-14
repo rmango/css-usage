@@ -103,15 +103,10 @@ void function () {
                         }
                     }
                 }
-<<<<<<< HEAD:src/recipes/archive/imgEdgeSearch.js
-<<<<<<< HEAD:src/recipes/imgEdgeSearch.js
-            }    
-=======
-            }   
->>>>>>> browserPage:src/recipes/archive/imgEdgeSearch.js
-=======
+
+  
+
             }
->>>>>>> imgBranch:src/recipes/imgEdgeSearch.js
         }
 
         return results;
