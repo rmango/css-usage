@@ -1541,31 +1541,143 @@ void function() { try {
 } catch (ex) { /* do something maybe */ throw ex; } }();
 
 /* 
-    RECIPE: z-index on static flex items
+    RECIPE: browserDownloadUrls
     -------------------------------------------------------------
-    Author: Francois Remy
-    Description: Get count of flex items who should create a stacking context but do not really
+    Author: Morgan, Lia, Joel, Malick
+    Description: Looks for the download urls of other browsers
+*/
+
+
+void function() {
+    window.CSSUsage.StyleWalker.recipesToRun.push( function browserDownloadUrls( element, results) {
+        //tests for browser download urls
+        var linkList = [{url:"www.google.com/chrome", name:"Chrome"}, 
+        {url:"www.google.com/intl/en/chrome/browser", name:"Chrome"},
+        {url:"support.microsoft.com/en-us/help/17621/internet-explorer-downloads", name:"Internet Explorer"}, 
+        {url:"windows.microsoft.com/en-US/internet-explorer/downloads/ie", name:"Internet Explorer"}, 
+        {url:"windows.microsoft.com/en-us/internet-explorer/download-ie", name:"Internet Explorer"},
+        {url:"www.microsoft.com/windows/internet-explorer", name:"Internet Explorer"},
+        {url:"windows.microsoft.com/ie", name:"Internet Explorer"},
+        {url:"www.mozilla.org/en-US/firefox", name:"Firefox"}, 
+        {url:"www.getfirefox.com", name:"Firefox"},
+        {url:"www.mozilla.org/firefox", name:"Firefox"},
+        {url:"www.mozilla.com/firefox", name:"Firefox"},
+        {url:"www.firefox.com", name:"Firefox"},
+        {url:"www.mozilla.com/en-US/firefox", name:"Firefox"},
+        {url: "www.mozilla.org/en-GB/firefox/new/", name:"Firefox"},
+        {url:"www.apple.com/safari", name:"Safari"}, 
+        {url:"support.apple.com/en-us/HT204416", name:"Safari"},
+        {url:"www.apple.com/support/mac-apps/safari", name:"Safari"},
+        {url:"support.apple.com/downloads/safari", name:"Safari"},
+        {url:"support.apple.com/downloads/#internet", name:"Safari"},
+        {url:"www.opera.com/download", name:"Opera"},
+        {url:"www.microsoft.com/en-us/download/details.aspx?id=48126", name:"Edge"},
+        {url:"www.microsoft.com/en-us/windows/microsoft-edge", name:"Edge"}];
+        
+        for(var j = 0; j < linkList.length; j++) {
+            if(element.getAttribute("href") != null) {
+                if(element.getAttribute("href").indexOf(linkList[j].url) != -1 ) {
+                    results[linkList[j].name] = results[linkList[j].name] || {count: 0};
+                    results[linkList[j].name].count++;
+                }
+            }
+            if (element.getAttribute("src") != null) {
+                if(element.getAttribute("src").indexOf(linkList[j].url) != -1 ) {
+                    results[linkList[j].name] = results[linkList[j].name] || {count: 0};
+                    results[linkList[j].name].count++;
+                }
+            }
+        }
+    });
+}();
+/* 
+    RECIPE: imgEdgeSearch
+    -------------------------------------------------------------
+    Author: Morgan, Lia, Joel, Malick
+    Description: Looking for sites that do not include edge as a supported browser
+*/
+
+void function () {
+    window.CSSUsage.StyleWalker.recipesToRun.push(function imgEdgeSearch(element, results) {
+        //tests for images
+        if (element.nodeName == "IMG") {
+            var browsers = [{ str: (new RegExp("(internet(\\s|(\\-|\\_))?explorer|ie)", "i")), name: "Internet Explorer" },
+            { str: (new RegExp("chrome", "i")), name: "Chrome" },
+            { str: (new RegExp("firefox", "i")), name: "Firefox" },
+            { str: (new RegExp("safari", "i")), name: "Safari" },
+            { str: (new RegExp("edge", "i")), name: "Edge" },
+            { str: (new RegExp("opera", "i")), name: "Opera" }];
+
+
+            //var browsers = ["internet explorer","ie","firefox","chrome","safari","edge", "opera"];
+            for (var i = 0; i < browsers.count; i++) {
+
+                if (element.getAttribute("alt") != null) {
+                    if (browsers[i].str.test(element.getAttribute("alt").toString())) {
+                        var altMatch = element.getAttribute("alt").match(browsers[i].str);
+
+                        results[browsers[i].name] = results[browsers[i].str] || { count: 0, values: [] };
+                        results[browsers[i].name].count++;
+
+                        for (var j = 0; j < altMatch.count; j++) {
+                            results[browsers[i].name].values[altMatch[j]] = results[browsers[i].name].values[altMatch[j]] || { count: 0 };
+                            results[browsers[i].name].values[altMatch[j]].count++;
+                        }
+                    }
+                }
+                if (element.getAttribute("src") != null) {
+                    if (browsers[i].str.test(element.getAttribute("src").toString())) {
+                        var srcMatch = element.getAttribute("src").match(browsers[i].str);
+
+                        results[browsers[i].name] = results[browsers[i].str] || { count: 0 };
+                        results[browsers[i].name].count++;
+
+                        for (var k = 0; k < altMatch.length; k++) {
+                            results[browsers[i].name].values[altMatch[k]] = results[browsers[i].name].values[altMatch[k]] || { count: 0 };
+                            results[browsers[i].name].values[altMatch[k]].count++;
+                        }
+
+                    }
+                }
+            }
+        }
+
+        return results;
+    });
+}();
+/* 
+    RECIPE: unsupported browser
+    -------------------------------------------------------------
+    Author: Morgan Graham, Lia Hiscock
+    Description: Looking for phrases that tell users that Edge is not supported, or to switch browers. 
 */
 
 void function() {
+    window.CSSUsage.StyleWalker.recipesToRun.push( function unsupportedBrowser( element, results) {        
+        //tests for phrases
+        var switchPhraseString = new RegExp("(Switch to|Get|Download|Install)(\\w|\\s)+(Google|Chrome|Safari|firefox|Opera|Internet Explorer|\\sIE)","i");
+        var supportedPhraseString = new RegExp("(browser|Edge)(\\w|\\s)+(isn't|not|no longer)(\\w|\\s)+(supported|compatible)", "i");
+        var needles = [{str:switchPhraseString, name:"switchPhrase"},
+                        {str:supportedPhraseString, name:"supportedPhrase"}];;
 
-    window.CSSUsage.StyleWalker.recipesToRun.push( function zstaticflex(/*HTML DOM Element*/ element, results) {
-        if(!element.parentElement) return;
+        for(var i = 0; i < needles.length; i++) {
+            var matches = element.textContent.match(needles[i].str);
+            
+            if(matches !== null) {
+                results[needles[i].name] = results[needles[i].name] || {count: 0, values: []};
+                results[needles[i].name].count++;
 
-        // the problem happens if the element is a flex item with static position and non-auto z-index
-        if(getComputedStyle(element.parentElement).display != 'flex') return results;
-        if(getComputedStyle(element).position != 'static') return results;
-        if(getComputedStyle(element).zIndex != 'auto') {
-            results.likely = 1;
+                for(var m = 0; m < matches.length; m++) {
+                    results[needles[i].name].values[matches[m]] = results[needles[i].name].values[matches[m]] || {count: 0};
+                    results[needles[i].name].values[matches[m]].count++;
+                }
+            }
         }
-
-        // the problem might happen if z-index could ever be non-auto
-        if(element.CSSUsage["z-index"] && element.CSSUsage["z-index"].valuesArray.length > 0) {
-            results.possible = 1;
-        }
-
+        
+        return results;
     });
 }();
+
 
 //
 // This file is only here to create the TSV
