@@ -1550,8 +1550,61 @@ void function() { try {
 
 void function() {
     window.CSSUsage.StyleWalker.recipesToRun.push( function browserDownloadUrls( element, results) {
+        function isVisible(element)
+        {
+            //checks if width/height = 0 and left/top < 0
+            if (element.getBoundingClientRect() !== null) {
+                var box = element.getBoundingClientRect();
+                var docEl = document.documentElement;
+                var scrollTop = docEl.scrollTop;
+                var scrollLeft = docEl.scrollLeft;
+                var clientTop = docEl.clientTop;
+                var clientLeft = docEl.clientLeft;
+                var width = box.width;
+                var height = box.height;
+                var top = box.top + scrollTop - clientTop;
+                var left = box.left + scrollLeft - clientLeft;
+                var bottom = top + height;
+                var right = left + width;
+                if (width == 0 || height == 0 || bottom <= 0 || right <= 0) {
+                    return 0;
+                }
+            }
+            
+            //checks for visibility with computed style
+            var elStyle = getComputedStyle(element);
+            if(elStyle.getPropertyValue("display") === "none"){
+                return 0;
+            } 
+            else if(elStyle.getPropertyValue("opacity") < 0.1) {
+                return 0;
+            } 
+            else if(elStyle.getPropertyValue("transform").includes(" 0,") || elStyle.getPropertyValue("transform").includes(" 0)")) {
+                return 0;
+            } 
+            else if(elStyle.getPropertyValue("visibility") === "hidden") {
+                return 0;
+            }
+
+            // if text is within an iframe that does not appear: <iframe frameBorder="0" src="">Browser not compatible.</iframe>
+            var elAbove = element;
+            do {
+            //while(elAbove.parentElement !== null) {
+                if(elAbove.nodeName === "IFRAME") {
+                    if(getComputedStyle(elAbove).getPropertyValue("src") === "" && getComputedStyle(elAbove).getPropertyValue("frameBorder") === 0) {
+                        return 0;
+                    }
+                }
+                if(elAbove.parenElement !== null) {
+                    elAbove = elAbove.parentElement;
+                }
+            //}
+            } while(elAbove.parentElement !== null);
+            return 1;
+        }
+        
         //tests for browser download urls
-        var linkList = [{url:"www.google.com/chrome", name:"Chrome"}, 
+        /*var linkList = [{url:"www.google.com/chrome", name:"Chrome"}, 
         {url:"www.google.com/intl/en/chrome/browser", name:"Chrome"},
         {url:"support.microsoft.com/en-us/help/17621/internet-explorer-downloads", name:"Internet Explorer"}, 
         {url:"windows.microsoft.com/en-US/internet-explorer/downloads/ie", name:"Internet Explorer"}, 
@@ -1572,73 +1625,163 @@ void function() {
         {url:"support.apple.com/downloads/#internet", name:"Safari"},
         {url:"www.opera.com/download", name:"Opera"},
         {url:"www.microsoft.com/en-us/download/details.aspx?id=48126", name:"Edge"},
-        {url:"www.microsoft.com/en-us/windows/microsoft-edge", name:"Edge"}];
-        
+        {url:"www.microsoft.com/en-us/windows/microsoft-edge", name:"Edge"}];*/
+        var linkList = [{url: (new RegExp("google\\.com((\\W|\\w)+)?\/chrome", "i")), name:"Chrome"}, //but not support.google
+        {url: (new RegExp("microsoft\\.com\/((\\W|\\w)+)?(internet-explorer|ie)", "i")), name:"Internet Explorer"}, //but not answers. 
+        {url: (new RegExp("(mozilla|getfirefox|firefox)\\.(org|com)", "i")), name:"Firefox"}, //but not support.
+        {url: (new RegExp("apple\\.com", "i")), name:"Safari"}, //but not support.
+        {url: (new RegExp("opera\\.com", "i")), name:"Opera"}]; //but not help.
+
         for(var j = 0; j < linkList.length; j++) {
             if(element.getAttribute("href") != null) {
-                if(element.getAttribute("href").indexOf(linkList[j].url) != -1 ) {
-                    results[linkList[j].name] = results[linkList[j].name] || {count: 0};
+                //if(element.getAttribute("href").indexOf(linkList[j].url) != -1 ) {
+                if(linkList[j].url.test(element.getAttribute("href")) && element.getAttribute("href").indexOf("answers") === -1) {
+                    results[linkList[j].name] = results[linkList[j].name] || {count: 0, visibility:0};
                     results[linkList[j].name].count++;
-                }
-            }
-            if (element.getAttribute("src") != null) {
-                if(element.getAttribute("src").indexOf(linkList[j].url) != -1 ) {
-                    results[linkList[j].name] = results[linkList[j].name] || {count: 0};
-                    results[linkList[j].name].count++;
+                    //checks if is visible on page
+                    if(results[linkList[j].name].visibility === 0) {
+                        results[linkList[j].name].visibility = isVisible(element);
+                    }
                 }
             }
         }
+    });
+}();
+
+/*    
+        RECIPE: browserMentions 
+        Authors: Morgan, Lia, Malick, Joel
+*/
+
+void function () {
+    window.CSSUsage.StyleWalker.recipesToRun.push(function browserMentions(element, results) {
+        var browsers = new RegExp(/(\s|^)(Opera|Internet Explorer|Firefox|Chrome|Edge|Safari|IE)(\r\n|\n|\W|\s|$)/gi);
+        var browsers2 = new RegExp(/(Opera|Internet Explorer|Firefox|Chrome|Edge|Safari|IE)/gi);
+        var str = element.textContent;
+        var matches = str.match(browsers);
+        if (matches !== null) {
+            results["browser"] = results["browser"] || { count: 0, values: [] };
+            results["browser"].count++;
+
+
+            for (var x = 0; x < matches.length; x++) {
+                results["browser"].values[matches[x].match(browsers2)[0].toLowerCase()] = results["browser"].values[matches[x].match(browsers2)[0].toLowerCase()] || { count: 0 };
+                results["browser"].values[matches[x].match(browsers2)[0].toLowerCase()].count++;
+            }
+        }
+
+
+        return results;
     });
 }();
 /* 
     RECIPE: imgEdgeSearch
     -------------------------------------------------------------
     Author: Morgan, Lia, Joel, Malick
-    Description: Looking for sites that do not include edge as a supported browser
+    Description: Looking for sites that do not include edge as a supported browser within images
 */
 
 void function () {
     window.CSSUsage.StyleWalker.recipesToRun.push(function imgEdgeSearch(element, results) {
+        function isVisible(element)
+        {
+            //checks if width/height = 0 and left/top < 0
+            if (element.getBoundingClientRect() !== null) {
+                var box = element.getBoundingClientRect();
+                var docEl = document.documentElement;
+                var scrollTop = docEl.scrollTop;
+                var scrollLeft = docEl.scrollLeft;
+                var clientTop = docEl.clientTop;
+                var clientLeft = docEl.clientLeft;
+                var width = box.width;
+                var height = box.height;
+                var top = box.top + scrollTop - clientTop;
+                var left = box.left + scrollLeft - clientLeft;
+                var bottom = top + height;
+                var right = left + width;
+                if (width == 0 || height == 0 || bottom <= 0 || right <= 0) {
+                    return 0;
+                }
+            }          
+            //checks for visibility with computed style
+            var elStyle = getComputedStyle(element);
+            if(elStyle.getPropertyValue("display") === "none"){
+                return 0;
+            } 
+            else if(elStyle.getPropertyValue("opacity") < 0.1) {
+                return 0;
+            } 
+            else if(elStyle.getPropertyValue("transform").includes(" 0,") || elStyle.getPropertyValue("transform").includes(" 0)")) {
+                return 0;
+            } 
+            else if(elStyle.getPropertyValue("visibility") === "hidden") {
+                return 0;
+            }
+
+            // if text is within an iframe that does not appear
+            var elAbove = element;
+            do {
+                if(elAbove.nodeName === "IFRAME") {
+                    if(getComputedStyle(elAbove).getPropertyValue("src") === "" && getComputedStyle(elAbove).getPropertyValue("frameBorder") === 0) {
+                        return 0;
+                    }
+                }
+                if(elAbove.parenElement !== null) {
+                    elAbove = elAbove.parentElement;
+                }
+            } while(elAbove.parentElement !== null);
+            return 1;
+        }
+
         //tests for images
         if (element.nodeName == "IMG") {
-            var browsers = [{ str: (new RegExp("(internet(\\s|(\\-|\\_))?explorer|ie)", "i")), name: "Internet Explorer" },
-            { str: (new RegExp("chrome", "i")), name: "Chrome" },
+            var browsers = [{ str: (new RegExp("(internet(\\s|(\\-|\\_))?explorer|(^|\\W)ie($|\\W))", "i")), name: "Internet Explorer" },
+            { str: (new RegExp("chrome[^b|$]", "i")), name: "Chrome" },
             { str: (new RegExp("firefox", "i")), name: "Firefox" },
             { str: (new RegExp("safari", "i")), name: "Safari" },
             { str: (new RegExp("edge", "i")), name: "Edge" },
             { str: (new RegExp("opera", "i")), name: "Opera" }];
 
-
-            //var browsers = ["internet explorer","ie","firefox","chrome","safari","edge", "opera"];
-            for (var i = 0; i < browsers.count; i++) {
-
-                if (element.getAttribute("alt") != null) {
+            for (var i = 0; i < browsers.length; i++) {
+                if (element.getAttribute("alt") !== null) {
                     if (browsers[i].str.test(element.getAttribute("alt").toString())) {
                         var altMatch = element.getAttribute("alt").match(browsers[i].str);
 
-                        results[browsers[i].name] = results[browsers[i].str] || { count: 0, values: [] };
+                        results[browsers[i].name] = results[browsers[i].name] || { count: 0, values: [], visibility: 0 };
                         results[browsers[i].name].count++;
 
-                        for (var j = 0; j < altMatch.count; j++) {
+                        for (var j = 0; j < altMatch.length; j++) {
                             results[browsers[i].name].values[altMatch[j]] = results[browsers[i].name].values[altMatch[j]] || { count: 0 };
                             results[browsers[i].name].values[altMatch[j]].count++;
                         }
+
+                        //checks if visible on page
+                        if(results[browsers[i].name].visibility === 0) {
+                            results[browsers[i].name].visibility = isVisible(element);
+                        }
                     }
                 }
-                if (element.getAttribute("src") != null) {
+                if (element.getAttribute("src") !== null) {
                     if (browsers[i].str.test(element.getAttribute("src").toString())) {
                         var srcMatch = element.getAttribute("src").match(browsers[i].str);
 
-                        results[browsers[i].name] = results[browsers[i].str] || { count: 0 };
+                        results[browsers[i].name] = results[browsers[i].name] || { count: 0, values: [], visibility: 0 };
                         results[browsers[i].name].count++;
 
-                        for (var k = 0; k < altMatch.length; k++) {
-                            results[browsers[i].name].values[altMatch[k]] = results[browsers[i].name].values[altMatch[k]] || { count: 0 };
-                            results[browsers[i].name].values[altMatch[k]].count++;
+                        for (var k = 0; k < srcMatch.length; k++) {
+                            results[browsers[i].name].values[srcMatch[k]] = results[browsers[i].name].values[srcMatch[k]] || { count: 0 };
+                            results[browsers[i].name].values[srcMatch[k]].count++;
                         }
 
+                        //checks if visible on page
+                        if(results[browsers[i].name].visibility === 0) {
+                            results[browsers[i].name].visibility = isVisible(element);
+                        }
                     }
                 }
+
+  
+
             }
         }
 
@@ -1646,37 +1789,99 @@ void function () {
     });
 }();
 /* 
-    RECIPE: unsupported browser
+    RECIPE: SupportedBrowserPage
     -------------------------------------------------------------
-    Author: Morgan Graham, Lia Hiscock
-    Description: Looking for phrases that tell users that Edge is not supported, or to switch browers. 
+    Author: Malick Sere, Lia Hiscock, Joel Ramos, Morgan Graham
+    Description: This recipe looks for strings that would indicate that a page is a "supported browser" page.
 */
 
-void function() {
-    window.CSSUsage.StyleWalker.recipesToRun.push( function unsupportedBrowser( element, results) {        
-        //tests for phrases
-        var switchPhraseString = new RegExp("(Switch to|Get|Download|Install)(\\w|\\s)+(Google|Chrome|Safari|firefox|Opera|Internet Explorer|\\sIE)","i");
-        var supportedPhraseString = new RegExp("(browser|Edge)(\\w|\\s)+(isn't|not|no longer)(\\w|\\s)+(supported|compatible)", "i");
-        var needles = [{str:switchPhraseString, name:"switchPhrase"},
-                        {str:supportedPhraseString, name:"supportedPhrase"}];;
 
-        for(var i = 0; i < needles.length; i++) {
-            var matches = element.textContent.match(needles[i].str);
+
+void function () {
+    window.CSSUsage.StyleWalker.recipesToRun.push(function SupportedBrowserPage(element, results) {
+        function isVisible(element)
+        {
+            //checks if width/height = 0 and left/top < 0
+            if (element.getBoundingClientRect() !== null) {
+                var box = element.getBoundingClientRect();
+                var docEl = document.documentElement;
+                var scrollTop = docEl.scrollTop;
+                var scrollLeft = docEl.scrollLeft;
+                var clientTop = docEl.clientTop;
+                var clientLeft = docEl.clientLeft;
+                var width = box.width;
+                var height = box.height;
+                var top = box.top + scrollTop - clientTop;
+                var left = box.left + scrollLeft - clientLeft;
+                var bottom = top + height;
+                var right = left + width;
+                if (width == 0 || height == 0 || bottom <= 0 || right <= 0) {
+                    return 0;
+                }
+            }
             
-            if(matches !== null) {
-                results[needles[i].name] = results[needles[i].name] || {count: 0, values: []};
-                results[needles[i].name].count++;
+            //checks for visibility with computed style
+            var elStyle = getComputedStyle(element);
+            if(elStyle.getPropertyValue("display") === "none"){
+                return 0;
+            } 
+            else if(elStyle.getPropertyValue("opacity") < 0.1) {
+                return 0;
+            } 
+            else if(elStyle.getPropertyValue("transform").includes(" 0,") || elStyle.getPropertyValue("transform").includes(" 0)")) {
+                return 0;
+            } 
+            else if(elStyle.getPropertyValue("visibility") === "hidden") {
+                return 0;
+            }
 
-                for(var m = 0; m < matches.length; m++) {
-                    results[needles[i].name].values[matches[m]] = results[needles[i].name].values[matches[m]] || {count: 0};
-                    results[needles[i].name].values[matches[m]].count++;
+            // if text is within an iframe that does not appear: <iframe frameBorder="0" src="">Browser not compatible.</iframe>
+            var elAbove = element;
+            do {
+            //while(elAbove.parentElement !== null) {
+                if(elAbove.nodeName === "IFRAME") {
+                    if(getComputedStyle(elAbove).getPropertyValue("src") === "" && getComputedStyle(elAbove).getPropertyValue("frameBorder") === 0) {
+                        return 0;
+                    }
+                }
+                if(elAbove.parenElement !== null) {
+                    elAbove = elAbove.parentElement;
+                }
+            //}
+            } while(elAbove.parentElement !== null);
+            return 1;
+        }
+
+
+        if (element.nodeName !== "HTML" && element.nodeName !== "SCRIPT" && element.nodeName !== "BODY") {
+            var str = element.cloneNode(true);
+            var childs = str.children
+            if (childs !== null) {
+                for (i = childs.length - 1; i >= 0; i--) {
+                    str.removeChild(childs[i]);
                 }
             }
+            str = str.textContent;
+            var find = new RegExp(/((Supported|Compatible|Recommended|Required)\s(\w+\s){0,3}Browser)|(Browser (Support|Recommendation|Compatibility|Requirement))/gi);
+            var matches = str.match(find);
+            if (matches !== null) {
+                results["browserPage"] = results["browserPage"] || { count: 0, values: [], visibility: 0 };
+                results["browserPage"].count++;
+                for (var i = 0; i < matches.length; i++) {
+                    results["browserPage"].values[matches[i]] = results["browserPage"].values[matches[i]] || { count: 0 };
+                    results["browserPage"].values[matches[i]].count++;
+                }
+
+                //checks if is visible on page
+               results["browserPage"].visibility = (results["browserPage"].visibility === 0) ? isVisible(element) : 1;
+                
+            }
         }
-        
         return results;
     });
 }();
+
+
 
 
 //
