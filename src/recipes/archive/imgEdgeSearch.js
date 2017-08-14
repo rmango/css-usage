@@ -29,7 +29,11 @@ void function() {
                         results[browsers[i].name].count++;
                     }
                 }
+<<<<<<< HEAD:src/recipes/imgEdgeSearch.js
             }    
+=======
+            }   
+>>>>>>> browserPage:src/recipes/archive/imgEdgeSearch.js
         }
 
         return results;
