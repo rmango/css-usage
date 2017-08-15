@@ -1548,98 +1548,74 @@ void function() { try {
 */
 
 
-void function() {
-    window.CSSUsage.StyleWalker.recipesToRun.push( function browserDownloadUrls( element, results) {
+void function(){
+    window.CSSUsage.StyleWalker.recipesToRun.push(function browserDownloadUrls(element, results){
         function isVisible(element)
         {
             //checks if width/height = 0 and left/top < 0
-            if (element.getBoundingClientRect() !== null) {
-                var box = element.getBoundingClientRect();
-                var docEl = document.documentElement;
-                var scrollTop = docEl.scrollTop;
-                var scrollLeft = docEl.scrollLeft;
-                var clientTop = docEl.clientTop;
-                var clientLeft = docEl.clientLeft;
-                var width = box.width;
-                var height = box.height;
-                var top = box.top + scrollTop - clientTop;
-                var left = box.left + scrollLeft - clientLeft;
-                var bottom = top + height;
-                var right = left + width;
-                if (width == 0 || height == 0 || bottom <= 0 || right <= 0) {
-                    return 0;
-                }
-            }
+            if (element.getBoundingClientRect() !== null) {
+                var box = element.getBoundingClientRect();
+                var docEl = document.documentElement;
+                var scrollTop = docEl.scrollTop;
+                var scrollLeft = docEl.scrollLeft;
+                var clientTop = docEl.clientTop;
+                var clientLeft = docEl.clientLeft;
+                var width = box.width;
+                var height = box.height;
+                var top = box.top + scrollTop - clientTop;
+                var left = box.left + scrollLeft - clientLeft;
+                var bottom = top + height;
+                var right = left + width;
+                if (width == 0 || height == 0 || bottom <= 0 || right <= 0) {
+                    return 0;
+                }
+            }          
             
             //checks for visibility with computed style
             var elStyle = getComputedStyle(element);
             if(elStyle.getPropertyValue("display") === "none"){
                 return 0;
             } 
-            else if(elStyle.getPropertyValue("opacity") < 0.1) {
+            else if(elStyle.getPropertyValue("opacity") < 0.1){
                 return 0;
             } 
-            else if(elStyle.getPropertyValue("transform").includes(" 0,") || elStyle.getPropertyValue("transform").includes(" 0)")) {
+            else if(elStyle.getPropertyValue("transform").includes(" 0,") || elStyle.getPropertyValue("transform").includes(" 0)")){
                 return 0;
             } 
-            else if(elStyle.getPropertyValue("visibility") === "hidden") {
+            else if(elStyle.getPropertyValue("visibility") === "hidden"){
                 return 0;
             }
 
             // if text is within an iframe that does not appear: <iframe frameBorder="0" src="">Browser not compatible.</iframe>
             var elAbove = element;
-            do {
-            //while(elAbove.parentElement !== null) {
-                if(elAbove.nodeName === "IFRAME") {
-                    if(getComputedStyle(elAbove).getPropertyValue("src") === "" && getComputedStyle(elAbove).getPropertyValue("frameBorder") === 0) {
+            do{
+                if(elAbove.nodeName === "IFRAME"){
+                    if(getComputedStyle(elAbove).getPropertyValue("src") === "" && getComputedStyle(elAbove).getPropertyValue("frameBorder") === 0){
                         return 0;
                     }
                 }
-                if(elAbove.parenElement !== null) {
+                if(elAbove.parenElement !== null){
                     elAbove = elAbove.parentElement;
                 }
-            //}
             } while(elAbove.parentElement !== null);
             return 1;
         }
         
         //tests for browser download urls
-        /*var linkList = [{url:"www.google.com/chrome", name:"Chrome"}, 
-        {url:"www.google.com/intl/en/chrome/browser", name:"Chrome"},
-        {url:"support.microsoft.com/en-us/help/17621/internet-explorer-downloads", name:"Internet Explorer"}, 
-        {url:"windows.microsoft.com/en-US/internet-explorer/downloads/ie", name:"Internet Explorer"}, 
-        {url:"windows.microsoft.com/en-us/internet-explorer/download-ie", name:"Internet Explorer"},
-        {url:"www.microsoft.com/windows/internet-explorer", name:"Internet Explorer"},
-        {url:"windows.microsoft.com/ie", name:"Internet Explorer"},
-        {url:"www.mozilla.org/en-US/firefox", name:"Firefox"}, 
-        {url:"www.getfirefox.com", name:"Firefox"},
-        {url:"www.mozilla.org/firefox", name:"Firefox"},
-        {url:"www.mozilla.com/firefox", name:"Firefox"},
-        {url:"www.firefox.com", name:"Firefox"},
-        {url:"www.mozilla.com/en-US/firefox", name:"Firefox"},
-        {url: "www.mozilla.org/en-GB/firefox/new/", name:"Firefox"},
-        {url:"www.apple.com/safari", name:"Safari"}, 
-        {url:"support.apple.com/en-us/HT204416", name:"Safari"},
-        {url:"www.apple.com/support/mac-apps/safari", name:"Safari"},
-        {url:"support.apple.com/downloads/safari", name:"Safari"},
-        {url:"support.apple.com/downloads/#internet", name:"Safari"},
-        {url:"www.opera.com/download", name:"Opera"},
-        {url:"www.microsoft.com/en-us/download/details.aspx?id=48126", name:"Edge"},
-        {url:"www.microsoft.com/en-us/windows/microsoft-edge", name:"Edge"}];*/
         var linkList = [{url: (new RegExp("google\\.(\\w{0,4})((\\W|\\w)+)?\/chrome", "i")), name:"Chrome"}, //but not support.google
         {url: (new RegExp("microsoft\\.(\\w{0,4})\/((\\W|\\w)+)?(internet-explorer|ie)", "i")), name:"Internet Explorer"}, //but not answers. 
         {url: (new RegExp("(mozilla|getfirefox|firefox)\\.(\\w{0,4})", "i")), name:"Firefox"}, //but not support.
         {url: (new RegExp("apple\\.(\\w{0,4})", "i")), name:"Safari"}, //but not support.
         {url: (new RegExp("opera\\.(\\w{0,4})", "i")), name:"Opera"}]; //but not help.
 
-        for(var j = 0; j < linkList.length; j++) {
-            if(element.getAttribute("href") != null) {
-                //if(element.getAttribute("href").indexOf(linkList[j].url) != -1 ) {
-                if(linkList[j].url.test(element.getAttribute("href")) && element.getAttribute("href").indexOf("answers") === -1) {
+        for(var j = 0; j < linkList.length; j++){
+            if(element.getAttribute("href") != null){
+                //filtering out results that begin with "answers" to exclude answer forum results  
+                if(linkList[j].url.test(element.getAttribute("href")) && element.getAttribute("href").indexOf("answers") === -1){
                     results[linkList[j].name] = results[linkList[j].name] || {count: 0, visibility:0};
                     results[linkList[j].name].count++;
                     //checks if is visible on page
-                    if(results[linkList[j].name].visibility === 0) {
+                    if(results[linkList[j].name].visibility === 0){
                         results[linkList[j].name].visibility = isVisible(element);
                     }
                 }
@@ -1682,11 +1658,11 @@ void function () {
 */
 
 void function () {
-    window.CSSUsage.StyleWalker.recipesToRun.push(function imgEdgeSearch(element, results) {
+    window.CSSUsage.StyleWalker.recipesToRun.push(function imgEdgeSearch(element, results){
         function isVisible(element)
         {
             //checks if width/height = 0 and left/top < 0
-            if (element.getBoundingClientRect() !== null) {
+            if(element.getBoundingClientRect() !== null){
                 var box = element.getBoundingClientRect();
                 var docEl = document.documentElement;
                 var scrollTop = docEl.scrollTop;
@@ -1699,7 +1675,7 @@ void function () {
                 var left = box.left + scrollLeft - clientLeft;
                 var bottom = top + height;
                 var right = left + width;
-                if (width == 0 || height == 0 || bottom <= 0 || right <= 0) {
+                if(width == 0 || height == 0 || bottom <= 0 || right <= 0){
                     return 0;
                 }
             }          
@@ -1708,25 +1684,25 @@ void function () {
             if(elStyle.getPropertyValue("display") === "none"){
                 return 0;
             } 
-            else if(elStyle.getPropertyValue("opacity") < 0.1) {
+            else if(elStyle.getPropertyValue("opacity") < 0.1){
                 return 0;
             } 
-            else if(elStyle.getPropertyValue("transform").includes(" 0,") || elStyle.getPropertyValue("transform").includes(" 0)")) {
+            else if(elStyle.getPropertyValue("transform").includes(" 0,") || elStyle.getPropertyValue("transform").includes(" 0)")){
                 return 0;
             } 
-            else if(elStyle.getPropertyValue("visibility") === "hidden") {
+            else if(elStyle.getPropertyValue("visibility") === "hidden"){
                 return 0;
             }
 
             // if text is within an iframe that does not appear
             var elAbove = element;
-            do {
-                if(elAbove.nodeName === "IFRAME") {
-                    if(getComputedStyle(elAbove).getPropertyValue("src") === "" && getComputedStyle(elAbove).getPropertyValue("frameBorder") === 0) {
+            do{
+                if(elAbove.nodeName === "IFRAME"){
+                    if(getComputedStyle(elAbove).getPropertyValue("src") === "" && getComputedStyle(elAbove).getPropertyValue("frameBorder") === 0){
                         return 0;
                     }
                 }
-                if(elAbove.parenElement !== null) {
+                if(elAbove.parenElement !== null){
                     elAbove = elAbove.parentElement;
                 }
             } while(elAbove.parentElement !== null);
@@ -1734,7 +1710,7 @@ void function () {
         }
 
         //tests for images
-        if (element.nodeName == "IMG") {
+        if(element.nodeName == "IMG"){
             var browsers = [{ str: (new RegExp("(internet(\\s|(\\-|\\_))?explorer|(^|\\W)ie($|\\W))", "i")), name: "Internet Explorer" },
             { str: (new RegExp("chrome[^b|$]", "i")), name: "Chrome" },
             { str: (new RegExp("firefox", "i")), name: "Firefox" },
@@ -1742,46 +1718,43 @@ void function () {
             { str: (new RegExp("edge", "i")), name: "Edge" },
             { str: (new RegExp("opera", "i")), name: "Opera" }];
 
-            for (var i = 0; i < browsers.length; i++) {
-                if (element.getAttribute("alt") !== null) {
-                    if (browsers[i].str.test(element.getAttribute("alt").toString())) {
+            for(var i = 0; i < browsers.length; i++){
+                if(element.getAttribute("alt") !== null){
+                    if(browsers[i].str.test(element.getAttribute("alt").toString())){
                         var altMatch = element.getAttribute("alt").match(browsers[i].str);
 
                         results[browsers[i].name] = results[browsers[i].name] || { count: 0, values: [], visibility: 0 };
                         results[browsers[i].name].count++;
 
-                        for (var j = 0; j < altMatch.length; j++) {
+                        for(var j = 0; j < altMatch.length; j++){
                             results[browsers[i].name].values[altMatch[j]] = results[browsers[i].name].values[altMatch[j]] || { count: 0 };
                             results[browsers[i].name].values[altMatch[j]].count++;
                         }
 
                         //checks if visible on page
-                        if(results[browsers[i].name].visibility === 0) {
+                        if(results[browsers[i].name].visibility === 0){
                             results[browsers[i].name].visibility = isVisible(element);
                         }
                     }
                 }
-                if (element.getAttribute("src") !== null) {
-                    if (browsers[i].str.test(element.getAttribute("src").toString())) {
+                if(element.getAttribute("src") !== null){
+                    if(browsers[i].str.test(element.getAttribute("src").toString())){
                         var srcMatch = element.getAttribute("src").match(browsers[i].str);
 
                         results[browsers[i].name] = results[browsers[i].name] || { count: 0, values: [], visibility: 0 };
                         results[browsers[i].name].count++;
 
-                        for (var k = 0; k < srcMatch.length; k++) {
+                        for(var k = 0; k < srcMatch.length; k++){
                             results[browsers[i].name].values[srcMatch[k]] = results[browsers[i].name].values[srcMatch[k]] || { count: 0 };
                             results[browsers[i].name].values[srcMatch[k]].count++;
                         }
 
                         //checks if visible on page
-                        if(results[browsers[i].name].visibility === 0) {
+                        if(results[browsers[i].name].visibility === 0){
                             results[browsers[i].name].visibility = isVisible(element);
                         }
                     }
                 }
-
-  
-
             }
         }
 
@@ -1798,65 +1771,63 @@ void function () {
 
 
 void function () {
-    window.CSSUsage.StyleWalker.recipesToRun.push(function SupportedBrowserPage(element, results) {
-        function isVisible(element) {
+    window.CSSUsage.StyleWalker.recipesToRun.push(function SupportedBrowserPage(element, results){
+        function isVisible(element){
             //checks if width/height = 0 and left/top < 0
-                        if (element.getBoundingClientRect() !== null) {
-                                var box = element.getBoundingClientRect();
-                                var docEl = document.documentElement;
-                                var scrollTop = docEl.scrollTop;
-                                var scrollLeft = docEl.scrollLeft;
-                                var clientTop = docEl.clientTop;
-                                var clientLeft = docEl.clientLeft;
-                                var width = box.width;
-                                var height = box.height;
-                                var top = box.top + scrollTop - clientTop;
-                                var left = box.left + scrollLeft - clientLeft;
-                                var bottom = top + height;
-                                var right = left + width;
-                                if (width == 0 || height == 0 || bottom <= 0 || right <= 0) {
-                                        return 0;
-                                }
-                        }
+            if (element.getBoundingClientRect() !== null){
+                var box = element.getBoundingClientRect();
+                var docEl = document.documentElement;
+                var scrollTop = docEl.scrollTop;
+                var scrollLeft = docEl.scrollLeft;
+                var clientTop = docEl.clientTop;
+                var clientLeft = docEl.clientLeft;
+                var width = box.width;
+                var height = box.height;
+                var top = box.top + scrollTop - clientTop;
+                var left = box.left + scrollLeft - clientLeft;
+                var bottom = top + height;
+                var right = left + width;
+                if (width == 0 || height == 0 || bottom <= 0 || right <= 0) {
+                    return 0;
+                }
+            }
 
             //checks for visibility with computed style
             var elStyle = getComputedStyle(element);
-            if (elStyle.getPropertyValue("display") === "none") {
+            if(elStyle.getPropertyValue("display") === "none"){
                 return 0;
             }
-            else if (elStyle.getPropertyValue("opacity") < 0.1) {
+            else if(elStyle.getPropertyValue("opacity") < 0.1){
                 return 0;
             }
-            else if (elStyle.getPropertyValue("transform").includes(" 0,") || elStyle.getPropertyValue("transform").includes(" 0)")) {
+            else if(elStyle.getPropertyValue("transform").includes(" 0,") || elStyle.getPropertyValue("transform").includes(" 0)")){
                 return 0;
             }
-            else if (elStyle.getPropertyValue("visibility") === "hidden") {
+            else if(elStyle.getPropertyValue("visibility") === "hidden"){
                 return 0;
             }
 
             // if text is within an iframe that does not appear: <iframe frameBorder="0" src="">Browser not compatible.</iframe>
             var elAbove = element;
-            do {
-                //while(elAbove.parentElement !== null) {
-                if (elAbove.nodeName === "IFRAME") {
-                    if (getComputedStyle(elAbove).getPropertyValue("src") === "" && getComputedStyle(elAbove).getPropertyValue("frameBorder") === 0) {
+            do{
+                if(elAbove.nodeName === "IFRAME"){
+                    if(getComputedStyle(elAbove).getPropertyValue("src") === "" && getComputedStyle(elAbove).getPropertyValue("frameBorder") === 0){
                         return 0;
                     }
                 }
-                if (elAbove.parenElement !== null) {
+                if(elAbove.parenElement !== null){
                     elAbove = elAbove.parentElement;
                 }
-                //}
-            } while (elAbove.parentElement !== null);
+
+            }while(elAbove.parentElement !== null);
             return 1;
         }
 
-
-        if (element.nodeName !== "HTML" && element.nodeName !== "SCRIPT" && element.nodeName !== "BODY") {
+        if(element.nodeName !== "HTML" && element.nodeName !== "SCRIPT" && element.nodeName !== "BODY"){
             var str = element.cloneNode(true);
-            if (str.hasChildNodes()) {
+            if(str.hasChildNodes()){
                 var childs = str.children !== undefined ? str.children : str.childNodes;
-                for (var i = childs.length - 1; i >= 0; i--) {
+                for(var i = childs.length - 1; i >= 0; i--){
                     str.removeChild(childs[i]);
                 }
             }
@@ -1864,10 +1835,10 @@ void function () {
             str = str.textContent;
             var find = new RegExp(/((Supported|Compatible|Recommended|Required)\s(\w+\s){0,3}Browser)|(Browser (Support|Recommendation|Compatibility|Requirement))/gi);
             var matches = str.match(find);
-            if (matches !== null) {
+            if(matches !== null) {
                 results["browserPage"] = results["browserPage"] || { count: 0, values: [], visibility: 0 };
                 results["browserPage"].count++;
-                for (var i = 0; i < matches.length; i++) {
+                for(var i = 0; i < matches.length; i++){
                     results["browserPage"].values[matches[i]] = results["browserPage"].values[matches[i]] || { count: 0 };
                     results["browserPage"].values[matches[i]].count++;
                 }
