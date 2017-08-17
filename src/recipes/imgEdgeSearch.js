@@ -8,7 +8,7 @@
 void function () {
     window.CSSUsage.StyleWalker.recipesToRun.push(function imgEdgeSearch(element, results){
         //doesn't go to microsoft sites
-        if(window.location.href.toString().indexOf("microsoft.com") !== -1) {
+        if(window.location.href.toString().indexOf("microsoft.com") !== -1 && window.location.href.toString().indexOf("forum") !== -1){
             return results;
         }
         function isVisible(element)
@@ -54,7 +54,7 @@ void function () {
                         return 0;
                     }
                 }
-                if(elAbove.parenElement !== null){
+                if(elAbove.parentElement !== null){
                     elAbove = elAbove.parentElement;
                 }
             } while(elAbove.parentElement !== null);
@@ -84,8 +84,9 @@ void function () {
                         }
 
                         //checks if visible on page
-                        if(results[browsers[i].name].visibility === 0){
-                            results[browsers[i].name].visibility = isVisible(element);
+                        results["visibility"] = results["visibility"] || {value:0};
+                        if(results["visibility"].value === 0){
+                            results["visibility"].value = isVisible(element);
                         }
                     }
                 }

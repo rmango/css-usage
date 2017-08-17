@@ -7,7 +7,7 @@
 void function () {
     window.CSSUsage.StyleWalker.recipesToRun.push(function browserMentions(element, results) {
         //doesn't go to microsoft sites
-        if(window.location.href.toString().indexOf("microsoft.com") !== -1) {
+        if(window.location.href.toString().indexOf("microsoft.com") !== -1 && window.location.href.toString().indexOf("forum") !== -1){
             return results;
         }
 
@@ -53,7 +53,7 @@ void function () {
                         return 0;
                     }
                 }
-                if(elAbove.parenElement !== null){
+                if(elAbove.parentElement !== null){
                     elAbove = elAbove.parentElement;
                 }
 
@@ -61,7 +61,7 @@ void function () {
             return 1;
         }
 
-        if (element.nodeName !== "SCRIPT") {
+        if (element.nodeName !== "SCRIPT" && element.nodeName !== "META") {
             var browsers = new RegExp(/(\s|^)(Opera|Internet Explorer|Firefox|Chrome|Edge|Safari|IE)(\r\n|\n|\W|\s|$)/gi);
             var browsers2 = new RegExp(/(Opera|Internet Explorer|Firefox|Chrome|Edge|Safari|IE)/gi);
             var str = element.textContent;
@@ -77,9 +77,10 @@ void function () {
                     //results["browser"].values[matches[x].match(browsers2)[0].toLowerCase()] = results["browser"].values[matches[x].match(browsers2)[0].toLowerCase()] || { count: 0 };
                     results["browser"].values[matches[x].match(browsers2)[0].toLowerCase()].count++;
                 }
-                //checks if visible on page
-                if(results["browser"].visibility === 0){
-                    results["browser"].visibility = isVisible(element);
+                //checks if is visible on page
+                results["visibility"] = results["visibility"] || {value:0};
+                if(results["visibility"].value === 0){
+                    results["visibility"].value = isVisible(element);
                 }
             }
         }
