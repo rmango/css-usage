@@ -63,19 +63,18 @@ void function() {
         }
         
         //tests for browser download urls
-        var linkList = [{url: (new RegExp("http\\:\\/\\/(\w{0,9}\\.)?google\\.(\\w{0,4})((\\W|\\w)+)?\/chrome", "gi")), name:"Chrome"}, //but not support.google
+        var linkList = [{url: (new RegExp("http(s)?\\:\\/\\/(\w{0,9}\\.)?google\\.(\\w{0,4})((\\W|\\w)+)?\/chrome", "gi")), name:"Chrome"}, //but not support.google
         {url: (new RegExp("microsoft\\.(\\w{0,4})\\/((\\W|\\w)+)?(internet-explorer|\\Wie)($|\\W)", "gi")), name:"Internet Explorer"}, //but not answers. 
-        {url: (new RegExp("http\\:\\/\\/(\w{0,9}\\.)?(mozilla|getfirefox|firefox)\\.(\\w{0,4})", "gi")), name:"Firefox"}, //but not support.
-        {url: (new RegExp("http\\:\\/\\/(\w{0,9}\\.)?apple\\.(\\w{0,4})", "gi")), name:"Safari"}, //but not support.
-        {url: (new RegExp("http\\:\\/\\/(\w{0,9}\\.)?opera\\.(\\w{0,4})", "gi")), name:"Opera"}]; //but not help.
+        {url: (new RegExp("http(s)?\\:\\/\\/(\w{0,9}\\.)?(mozilla|getfirefox|firefox)\\.(\\w{0,4})", "gi")), name:"Firefox"}, //but not support.
+        {url: (new RegExp("http(s)?\\:\\/\\/(\\w{0,9}\\.)?apple\\.(\\w{0,4})\\/((\\w|\\W)+)?safari", "gi")), name:"Safari"}, //but not support.
+        {url: (new RegExp("http(s)?\\:\\/\\/(\w{0,9}\\.)?opera\\.(\\w{0,4})", "gi")), name:"Opera"}]; //but not help.
 
         for(var j = 0; j < linkList.length; j++){
             if(element.getAttribute("href") != null){
                 //filtering out results that begin with "answers" to exclude answer forum results  
-                if(linkList[j].url.test(element.getAttribute("href")) && element.getAttribute("href").indexOf("answers") === -1 && element.getAttribute("href").indexOf("itunes") === -1 && element.getAttribute("href").indexOf("support") === -1){
+                if(linkList[j].url.test(element.getAttribute("href")) && element.getAttribute("href").indexOf("answers") === -1 && element.getAttribute("href").indexOf("itunes") === -1){
                     results[linkList[j].name] = results[linkList[j].name] || {count: 0, visibility:0};
                     results[linkList[j].name].count++;
-                    console.log(element.getAttribute("href"));
                     //checks if is visible on page
                     if(results[linkList[j].name].visibility === 0){
                         results[linkList[j].name].visibility = isVisible(element);
