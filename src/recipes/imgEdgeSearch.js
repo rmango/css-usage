@@ -59,12 +59,12 @@ void function () {
 
         //tests for images
         if(element.nodeName == "IMG"){
-            var browsers = [{ str: (new RegExp("(internet(\\s|(\\-|\\_))?explorer|(^|\\W)ie($|\\W))", "i")), name: "Internet Explorer" },
-            { str: (new RegExp("chrome[^b|$]", "i")), name: "Chrome" },
-            { str: (new RegExp("firefox", "i")), name: "Firefox" },
-            { str: (new RegExp("safari", "i")), name: "Safari" },
-            { str: (new RegExp("edge", "i")), name: "Edge" },
-            { str: (new RegExp("opera", "i")), name: "Opera" }];
+            var browsers = [{ str: (new RegExp("(internet(\\s|(\\-|\\_))?explorer|(^|\\W)ie($|\\W))", "gi")), name: "Internet Explorer" },
+            { str: (new RegExp("chrome[^b|$]", "gi")), name: "Chrome" },
+            { str: (new RegExp("firefox", "gi")), name: "Firefox" },
+            { str: (new RegExp("safari", "gi")), name: "Safari" },
+            { str: (new RegExp("edge", "gi")), name: "Edge" },
+            { str: (new RegExp("opera", "gi")), name: "Opera" }];
 
             for(var i = 0; i < browsers.length; i++){
                 if(element.getAttribute("alt") !== null){
