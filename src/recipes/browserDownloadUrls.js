@@ -9,7 +9,7 @@
 void function() {
     window.CSSUsage.StyleWalker.recipesToRun.push(function browserDownloadUrls(element, results){
         //doesn't go to microsoft sites
-        if(window.location.href.toString().indexOf("microsoft.com") !== -1){
+        if(window.location.href.toString().indexOf("microsoft.com") !== -1 && window.location.href.toString().indexOf("forum") !== -1){
             return results;
         }
         function isVisible(element) {
@@ -55,7 +55,7 @@ void function() {
                         return 0;
                     }
                 }
-                if(elAbove.parenElement !== null){
+                if(elAbove.parentElement !== null){
                     elAbove = elAbove.parentElement;
                 }
             } while(elAbove.parentElement !== null);
@@ -74,11 +74,12 @@ void function() {
             if(element.getAttribute("href") != null){
                 //filtering out results that begin with "answers" to exclude answer forum results  
                 if(linkList[j].url.test(element.getAttribute("href")) && element.getAttribute("href").indexOf("answers") === -1 && element.getAttribute("href").indexOf("itunes") === -1){
-                    results[linkList[j].name] = results[linkList[j].name] || {count: 0, visibility:0};
+                    results[linkList[j].name] = results[linkList[j].name] || {count: 0};
                     results[linkList[j].name].count++;
                     //checks if is visible on page
-                    if(results[linkList[j].name].visibility === 0){
-                        results[linkList[j].name].visibility = isVisible(element);
+                    results["visibility"] = results["visibility"] || {value:0};
+                    if(results["visibility"].value === 0){
+                        results["visibility"].value = isVisible(element);
                     }
                 }
             }
