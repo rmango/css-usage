@@ -1607,7 +1607,7 @@ void function() {
         //tests for browser download urls
         var linkList = [{url: (new RegExp("http(s)?\\:\\/\\/(\w{0,9}\\.)?google\\.(\\w{0,4})((\\W|\\w)+)?\/chrome", "gi")), name:"Chrome"}, //but not support.google
         {url: (new RegExp("microsoft\\.(\\w{0,4})\\/((\\W|\\w)+)?(internet-explorer|\\Wie)($|\\W)", "gi")), name:"Internet Explorer"}, //but not answers.
-        {url: (new RegExp("microsoft\\.(\\w{0,4})\\/((\\W|\\w)+)?(microsoft-edge)($|\\W)", "gi")), name:"Edge"}, //but not answers.  
+        {url: (new RegExp("microsoft\\.(\\w{0,4})\\/(\\W|\\w)+?(microsoft-edge)($|\\W)", "gi")), name:"Edge"}, //but not answers.  
         {url: (new RegExp("http(s)?\\:\\/\\/(\w{0,9}\\.)?(mozilla|getfirefox|firefox)\\.(\\w{0,4})", "gi")), name:"Firefox"}, //but not support.
         {url: (new RegExp("http(s)?\\:\\/\\/(\\w{0,9}\\.)?apple\\.(\\w{0,4})\\/((\\w|\\W)+)?safari", "gi")), name:"Safari"}, //but not support.
         {url: (new RegExp("http(s)?\\:\\/\\/(\w{0,9}\\.)?opera\\.(\\w{0,4})", "gi")), name:"Opera"}]; //but not help.
