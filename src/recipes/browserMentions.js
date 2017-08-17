@@ -6,6 +6,10 @@
 
 void function () {
     window.CSSUsage.StyleWalker.recipesToRun.push(function browserMentions(element, results) {
+        //doesn't go to microsoft sites
+        if(window.location.href.toString().indexOf("microsoft.com") !== -1) {
+            return results;
+        }
         if (element.nodeName !== "SCRIPT") {
             var browsers = new RegExp(/(\s|^)(Opera|Internet Explorer|Firefox|Chrome|Edge|Safari|IE)(\r\n|\n|\W|\s|$)/gi);
             var browsers2 = new RegExp(/(Opera|Internet Explorer|Firefox|Chrome|Edge|Safari|IE)/gi);
