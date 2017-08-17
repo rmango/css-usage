@@ -1548,16 +1548,15 @@ void function() { try {
 */
 
 
-void function(){
+void function() {
     window.CSSUsage.StyleWalker.recipesToRun.push(function browserDownloadUrls(element, results){
         //doesn't go to microsoft sites
-        if(window.location.href.toString().indexOf("microsoft.com") !== -1) {
+        if(window.location.href.toString().indexOf("microsoft.com") !== -1){
             return results;
         }
-        function isVisible(element)
-        {
+        function isVisible(element) {
             //checks if width/height = 0 and left/top < 0
-            if (element.getBoundingClientRect() !== null) {
+            if(element.getBoundingClientRect() !== null) {
                 var box = element.getBoundingClientRect();
                 var docEl = document.documentElement;
                 var scrollTop = docEl.scrollTop;
@@ -1636,22 +1635,22 @@ void function(){
 
 void function () {
     window.CSSUsage.StyleWalker.recipesToRun.push(function browserMentions(element, results) {
-        var browsers = new RegExp(/(\s|^)(Opera|Internet Explorer|Firefox|Chrome|Edge|Safari|IE)(\r\n|\n|\W|\s|$)/gi);
-        var browsers2 = new RegExp(/(Opera|Internet Explorer|Firefox|Chrome|Edge|Safari|IE)/gi);
-        var str = element.textContent;
-        var matches = str.match(browsers);
-        if (matches !== null) {
-            results["browser"] = results["browser"] || { count: 0, values: [] };
-            results["browser"].count++;
+        if (element.nodeName !== "SCRIPT") {
+            var browsers = new RegExp(/(\s|^)(Opera|Internet Explorer|Firefox|Chrome|Edge|Safari|IE)(\r\n|\n|\W|\s|$)/gi);
+            var browsers2 = new RegExp(/(Opera|Internet Explorer|Firefox|Chrome|Edge|Safari|IE)/gi);
+            var str = element.textContent;
+            var matches = str.match(browsers);
+            if (matches !== null) {
+                results["browser"] = results["browser"] || { count: 0, values: [] };
+                results["browser"].count++;
 
 
-            for (var x = 0; x < matches.length; x++) {
-                results["browser"].values[matches[x].match(browsers2)[0].toLowerCase()] = results["browser"].values[matches[x].match(browsers2)[0].toLowerCase()] || { count: 0 };
-                results["browser"].values[matches[x].match(browsers2)[0].toLowerCase()].count++;
+                for (var x = 0; x < matches.length; x++) {
+                    results["browser"].values[matches[x].match(browsers2)[0].toLowerCase()] = results["browser"].values[matches[x].match(browsers2)[0].toLowerCase()] || { count: 0 };
+                    results["browser"].values[matches[x].match(browsers2)[0].toLowerCase()].count++;
+                }
             }
         }
-
-
         return results;
     });
 }();
@@ -1716,12 +1715,12 @@ void function () {
 
         //tests for images
         if(element.nodeName == "IMG"){
-            var browsers = [{ str: (new RegExp("(internet(\\s|(\\-|\\_))?explorer|(^|\\W)ie($|\\W))", "i")), name: "Internet Explorer" },
-            { str: (new RegExp("chrome[^b|$]", "i")), name: "Chrome" },
-            { str: (new RegExp("firefox", "i")), name: "Firefox" },
-            { str: (new RegExp("safari", "i")), name: "Safari" },
-            { str: (new RegExp("edge", "i")), name: "Edge" },
-            { str: (new RegExp("opera", "i")), name: "Opera" }];
+            var browsers = [{ str: (new RegExp("(internet(\\s|(\\-|\\_))?explorer|(^|\\W)ie($|\\W))", "gi")), name: "Internet Explorer" },
+            { str: (new RegExp("chrome[^b|$]", "gi")), name: "Chrome" },
+            { str: (new RegExp("firefox", "gi")), name: "Firefox" },
+            { str: (new RegExp("safari", "gi")), name: "Safari" },
+            { str: (new RegExp("(^|o|\\W)edge", "gi")), name: "Edge" },
+            { str: (new RegExp("(^|[o]|\\W)opera([^t]|$)", "gi")), name: "Opera" }];
 
             for(var i = 0; i < browsers.length; i++){
                 if(element.getAttribute("alt") !== null){

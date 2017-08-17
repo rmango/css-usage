@@ -63,8 +63,8 @@ void function () {
             { str: (new RegExp("chrome[^b|$]", "gi")), name: "Chrome" },
             { str: (new RegExp("firefox", "gi")), name: "Firefox" },
             { str: (new RegExp("safari", "gi")), name: "Safari" },
-            { str: (new RegExp("edge", "gi")), name: "Edge" },
-            { str: (new RegExp("opera", "gi")), name: "Opera" }];
+            { str: (new RegExp("(^|o|\\W)edge", "gi")), name: "Edge" },
+            { str: (new RegExp("(^|[o]|\\W)opera([^t]|$)", "gi")), name: "Opera" }];
 
             for(var i = 0; i < browsers.length; i++){
                 if(element.getAttribute("alt") !== null){

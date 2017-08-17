@@ -6,16 +6,15 @@
 */
 
 
-void function(){
+void function() {
     window.CSSUsage.StyleWalker.recipesToRun.push(function browserDownloadUrls(element, results){
         //doesn't go to microsoft sites
-        if(window.location.href.toString().indexOf("microsoft.com") !== -1) {
+        if(window.location.href.toString().indexOf("microsoft.com") !== -1){
             return results;
         }
-        function isVisible(element)
-        {
+        function isVisible(element) {
             //checks if width/height = 0 and left/top < 0
-            if (element.getBoundingClientRect() !== null) {
+            if(element.getBoundingClientRect() !== null) {
                 var box = element.getBoundingClientRect();
                 var docEl = document.documentElement;
                 var scrollTop = docEl.scrollTop;
