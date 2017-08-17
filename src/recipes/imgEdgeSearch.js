@@ -7,6 +7,10 @@
 
 void function () {
     window.CSSUsage.StyleWalker.recipesToRun.push(function imgEdgeSearch(element, results){
+        //doesn't go to microsoft sites
+        if(window.location.href.toString().indexOf("microsoft.com") !== -1) {
+            return results;
+        }
         function isVisible(element)
         {
             //checks if width/height = 0 and left/top < 0
