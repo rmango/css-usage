@@ -1683,11 +1683,7 @@ void function () {
                         return 0;
                     }
                 }
-<<<<<<< HEAD
-                if(elAbove.parenElement !== null){
-=======
                 if(elAbove.parentElement !== null){
->>>>>>> 40c189f3a2aa1ab941e6d28d4e5d40174c2906c8
                     elAbove = elAbove.parentElement;
                 }
 
@@ -1695,11 +1691,7 @@ void function () {
             return 1;
         }
 
-<<<<<<< HEAD
-        if (element.nodeName !== "SCRIPT") {
-=======
         if (element.nodeName !== "SCRIPT" && element.nodeName !== "META") {
->>>>>>> 40c189f3a2aa1ab941e6d28d4e5d40174c2906c8
             var browsers = new RegExp(/(\s|^)(Opera|Internet Explorer|Firefox|Chrome|Edge|Safari|IE)(\r\n|\n|\W|\s|$)/gi);
             var browsers2 = new RegExp(/(Opera|Internet Explorer|Firefox|Chrome|Edge|Safari|IE)/gi);
             var str = element.textContent;
@@ -1715,16 +1707,10 @@ void function () {
                     //results["browser"].values[matches[x].match(browsers2)[0].toLowerCase()] = results["browser"].values[matches[x].match(browsers2)[0].toLowerCase()] || { count: 0 };
                     results["browser"].values[matches[x].match(browsers2)[0].toLowerCase()].count++;
                 }
-<<<<<<< HEAD
-                //checks if visible on page
-                if(results["browser"].visibility === 0){
-                    results["browser"].visibility = isVisible(element);
-=======
                 //checks if is visible on page
                 results["visibility"] = results["visibility"] || {value:0};
                 if(results["visibility"].value === 0){
                     results["visibility"].value = isVisible(element);
->>>>>>> 40c189f3a2aa1ab941e6d28d4e5d40174c2906c8
                 }
             }
         }
@@ -1808,7 +1794,7 @@ void function () {
                     if(browsers[i].str.test(element.getAttribute("alt").toString())){
                         var altMatch = element.getAttribute("alt").match(browsers[i].str);
 
-                        results[browsers[i].name] = results[browsers[i].name] || { count: 0, values: [], visibility: 0 };
+                        results[browsers[i].name] = results[browsers[i].name] || { count: 0, values: [] };
                         results[browsers[i].name].count++;
 
                         for(var j = 0; j < altMatch.length; j++){
@@ -1827,7 +1813,7 @@ void function () {
                     if(browsers[i].str.test(element.getAttribute("src").toString())){
                         var srcMatch = element.getAttribute("src").match(browsers[i].str);
 
-                        results[browsers[i].name] = results[browsers[i].name] || { count: 0, values: [], visibility: 0 };
+                        results[browsers[i].name] = results[browsers[i].name] || { count: 0, values: [] };
                         results[browsers[i].name].count++;
 
                         for(var k = 0; k < srcMatch.length; k++){
@@ -1835,9 +1821,10 @@ void function () {
                             results[browsers[i].name].values[srcMatch[k]].count++;
                         }
 
-                        //checks if visible on page
-                        if(results[browsers[i].name].visibility === 0){
-                            results[browsers[i].name].visibility = isVisible(element);
+                        ///checks if visible on page
+                        results["visibility"] = results["visibility"] || {value:0};
+                        if(results["visibility"].value === 0){
+                            results["visibility"].value = isVisible(element);
                         }
                     }
                 }
