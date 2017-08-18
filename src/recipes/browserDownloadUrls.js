@@ -28,23 +28,23 @@ void function() {
                 var bottom = top + height;
                 var right = left + width;
                 if (width == 0 || height == 0 || bottom <= 0 || right <= 0) {
-                    return 0;
+                    return false;
                 }
             }          
             
             //checks for visibility with computed style
             var elStyle = getComputedStyle(element);
             if(elStyle.getPropertyValue("display") === "none"){
-                return 0;
+                return false;
             } 
             else if(elStyle.getPropertyValue("opacity") < 0.1){
-                return 0;
+                return false;
             } 
             else if(elStyle.getPropertyValue("transform").includes(" 0,") || elStyle.getPropertyValue("transform").includes(" 0)")){
-                return 0;
+                return false;
             } 
             else if(elStyle.getPropertyValue("visibility") === "hidden"){
-                return 0;
+                return false;
             }
 
             // if text is within an iframe that does not appear
@@ -52,14 +52,14 @@ void function() {
             do{
                 if(elAbove.nodeName === "IFRAME"){
                     if(getComputedStyle(elAbove).getPropertyValue("src") === "" && getComputedStyle(elAbove).getPropertyValue("frameBorder") === 0){
-                        return 0;
+                        return false;
                     }
                 }
                 if(elAbove.parentElement !== null){
                     elAbove = elAbove.parentElement;
                 }
             } while(elAbove.parentElement !== null);
-            return 1;
+            return true;
         }
         
         //tests for browser download urls
@@ -77,9 +77,9 @@ void function() {
                     results[linkList[j].name] = results[linkList[j].name] || {count: 0};
                     results[linkList[j].name].count++;
                     //checks if is visible on page
-                    results["visibility"] = results["visibility"] || {value:0};
-                    if(results["visibility"].value === 0){
-                        results["visibility"].value = isVisible(element);
+                    results["visibility"] = results["visibility"] || {value:"false"};
+                    if(results["visibility"].value === "false"){
+                        results["visibility"].value = isVisible(element).toString();
                     }
                 }
             }
