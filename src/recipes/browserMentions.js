@@ -82,9 +82,7 @@ void function () {
                 for (var x = 0; x < matches.length; x++) {
                     var foundBrowserName = matches[x].match(browsers2)[0].toLowerCase();
                     results["browser"].values[foundBrowserName] = results["browser"].values[foundBrowserName] || {count: 0}
-            
-                    //results["browser"].values[matches[x].match(browsers2)[0].toLowerCase()] = results["browser"].values[matches[x].match(browsers2)[0].toLowerCase()] || { count: 0 };
-                    results["browser"].values[matches[x].match(browsers2)[0].toLowerCase()].count++;
+                    results["browser"].values[foundBrowserName].count++;
                 }
                 //checks if is visible on page
                 results["visibility"] = results["visibility"] || {value:0};
