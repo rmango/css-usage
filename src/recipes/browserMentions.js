@@ -7,7 +7,7 @@
 void function () {
     window.CSSUsage.StyleWalker.recipesToRun.push(function browserMentions(element, results) {
         //doesn't go to microsoft sites
-        if(window.location.href.toString().indexOf("microsoft.com") !== -1 && window.location.href.toString().indexOf("forum") !== -1){
+        if(window.location.href.toString().indexOf("microsoft.com") !== -1 || window.location.href.toString().indexOf("forum") !== -1){
             return results;
         }
 
@@ -62,9 +62,18 @@ void function () {
         }
 
         if (element.nodeName !== "SCRIPT" && element.nodeName !== "META") {
+
+            var str = element.cloneNode(true);
+            if(str.hasChildNodes()){
+                var childs = str.children !== undefined ? str.children : str.childNodes;
+                for(var i = childs.length - 1; i >= 0; i--){
+                    str.removeChild(childs[i]);
+                }
+            }
+            
             var browsers = new RegExp(/(\s|^)(Opera|Internet Explorer|Firefox|Chrome|Edge|Safari|IE)(\r\n|\n|\W|\s|$)/gi);
             var browsers2 = new RegExp(/(Opera|Internet Explorer|Firefox|Chrome|Edge|Safari|IE)/gi);
-            var str = element.textContent;
+            var str = str.textContent;
             var matches = str.match(browsers);
             if (matches !== null) {
                 results["browser"] = results["browser"] || { count: 0, values: [] };

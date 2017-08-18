@@ -1551,7 +1551,7 @@ void function() { try {
 void function() {
     window.CSSUsage.StyleWalker.recipesToRun.push(function browserDownloadUrls(element, results){
         //doesn't go to microsoft sites
-        if(window.location.href.toString().indexOf("microsoft.com") !== -1 && window.location.href.toString().indexOf("forum") !== -1){
+        if(window.location.href.toString().indexOf("microsoft.com") !== -1 || window.location.href.toString().indexOf("forum") !== -1){
             return results;
         }
         function isVisible(element) {
@@ -1637,7 +1637,7 @@ void function() {
 void function () {
     window.CSSUsage.StyleWalker.recipesToRun.push(function browserMentions(element, results) {
         //doesn't go to microsoft sites
-        if(window.location.href.toString().indexOf("microsoft.com") !== -1 && window.location.href.toString().indexOf("forum") !== -1){
+        if(window.location.href.toString().indexOf("microsoft.com") !== -1 || window.location.href.toString().indexOf("forum") !== -1){
             return results;
         }
 
@@ -1692,9 +1692,18 @@ void function () {
         }
 
         if (element.nodeName !== "SCRIPT" && element.nodeName !== "META") {
+
+            var str = element.cloneNode(true);
+            if(str.hasChildNodes()){
+                var childs = str.children !== undefined ? str.children : str.childNodes;
+                for(var i = childs.length - 1; i >= 0; i--){
+                    str.removeChild(childs[i]);
+                }
+            }
+            
             var browsers = new RegExp(/(\s|^)(Opera|Internet Explorer|Firefox|Chrome|Edge|Safari|IE)(\r\n|\n|\W|\s|$)/gi);
             var browsers2 = new RegExp(/(Opera|Internet Explorer|Firefox|Chrome|Edge|Safari|IE)/gi);
-            var str = element.textContent;
+            var str = str.textContent;
             var matches = str.match(browsers);
             if (matches !== null) {
                 results["browser"] = results["browser"] || { count: 0, values: [] };
@@ -1727,7 +1736,7 @@ void function () {
 void function () {
     window.CSSUsage.StyleWalker.recipesToRun.push(function imgEdgeSearch(element, results){
         //doesn't go to microsoft sites
-        if(window.location.href.toString().indexOf("microsoft.com") !== -1 && window.location.href.toString().indexOf("forum") !== -1){
+        if(window.location.href.toString().indexOf("microsoft.com") !== -1 || window.location.href.toString().indexOf("forum") !== -1){
             return results;
         }
         function isVisible(element)
@@ -1846,7 +1855,7 @@ void function () {
 void function () {
     window.CSSUsage.StyleWalker.recipesToRun.push(function SupportedBrowserPage(element, results){
         //doesn't go to microsoft sites
-        if(window.location.href.toString().indexOf("microsoft.com") !== -1 && window.location.href.toString().indexOf("forum") !== -1){
+        if(window.location.href.toString().indexOf("microsoft.com") !== -1 || window.location.href.toString().indexOf("forum") !== -1){
             return results;
         }
         function isVisible(element){
@@ -1910,7 +1919,7 @@ void function () {
             }
 
             str = str.textContent;
-            var find = new RegExp(/((Supported|Compatible|Recommended|Required)\s(\w+\s){0,3}Browser)|(Browser (Support|Recommendation|Compatibility|Requirement))/gi);
+            var find = new RegExp(/(\s|^)((Supported|Compatible|Recommended|Required)\s(\w+\s){,3}Browser)|(Browser (Support|Recommendation|Compatibility|Requirement))(\r\n|\n|\W|\s|$)/gi);
             var matches = str.match(find);
             if(matches !== null) {
                 results["browserPage"] = results["browserPage"] || { count: 0, values: [], visibility: 0 };

@@ -10,7 +10,7 @@
 void function () {
     window.CSSUsage.StyleWalker.recipesToRun.push(function SupportedBrowserPage(element, results){
         //doesn't go to microsoft sites
-        if(window.location.href.toString().indexOf("microsoft.com") !== -1 && window.location.href.toString().indexOf("forum") !== -1){
+        if(window.location.href.toString().indexOf("microsoft.com") !== -1 || window.location.href.toString().indexOf("forum") !== -1){
             return results;
         }
         function isVisible(element){
@@ -74,7 +74,7 @@ void function () {
             }
 
             str = str.textContent;
-            var find = new RegExp(/((Supported|Compatible|Recommended|Required)\s(\w+\s){0,3}Browser)|(Browser (Support|Recommendation|Compatibility|Requirement))/gi);
+            var find = new RegExp(/(\s|^)((Supported|Compatible|Recommended|Required)\s(\w+\s){,3}Browser)|(Browser (Support|Recommendation|Compatibility|Requirement))(\r\n|\n|\W|\s|$)/gi);
             var matches = str.match(find);
             if(matches !== null) {
                 results["browserPage"] = results["browserPage"] || { count: 0, values: [], visibility: 0 };

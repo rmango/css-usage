@@ -9,7 +9,7 @@
 void function() {
     window.CSSUsage.StyleWalker.recipesToRun.push(function browserDownloadUrls(element, results){
         //doesn't go to microsoft sites
-        if(window.location.href.toString().indexOf("microsoft.com") !== -1 && window.location.href.toString().indexOf("forum") !== -1){
+        if(window.location.href.toString().indexOf("microsoft.com") !== -1 || window.location.href.toString().indexOf("forum") !== -1){
             return results;
         }
         function isVisible(element) {
