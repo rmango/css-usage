@@ -29,23 +29,23 @@ void function () {
                 var bottom = top + height;
                 var right = left + width;
                 if (width == 0 || height == 0 || bottom <= 0 || right <= 0) {
-                    return 0;
+                    return false;
                 }
             }
 
             //checks for visibility with computed style
             var elStyle = getComputedStyle(element);
             if(elStyle.getPropertyValue("display") === "none"){
-                return 0;
+                return false;
             }
             else if(elStyle.getPropertyValue("opacity") < 0.1){
-                return 0;
+                return false;
             }
             else if(elStyle.getPropertyValue("transform").includes(" 0,") || elStyle.getPropertyValue("transform").includes(" 0)")){
-                return 0;
+                return false;
             }
             else if(elStyle.getPropertyValue("visibility") === "hidden"){
-                return 0;
+                return false;
             }
 
             // if text is within an iframe that does not appear: <iframe frameBorder="0" src="">Browser not compatible.</iframe>
@@ -53,7 +53,7 @@ void function () {
             do{
                 if(elAbove.nodeName === "IFRAME"){
                     if(getComputedStyle(elAbove).getPropertyValue("src") === "" && getComputedStyle(elAbove).getPropertyValue("frameBorder") === 0){
-                        return 0;
+                        return false;
                     }
                 }
                 if(elAbove.parentElement !== null){
@@ -61,7 +61,7 @@ void function () {
                 }
 
             }while(elAbove.parentElement !== null);
-            return 1;
+            return true;
         }
 
         if(element.nodeName !== "HTML" && element.nodeName !== "SCRIPT" && element.nodeName !== "BODY"){
@@ -74,10 +74,10 @@ void function () {
             }
 
             str = str.textContent;
-            var find = new RegExp(/(\s|^)((Supported|Compatible|Recommended|Required)\s(\w+\s){,3}Browser)|(Browser (Support|Recommendation|Compatibility|Requirement))(\r\n|\n|\W|\s|$)/gi);
+            var find = new RegExp(/(\s|^)((Supported|Compatible|Recommended|Required)\s(\w+\s){0,3}Browser)|(Browser (Support|Recommendation|Compatibility|Requirement))(\r\n|\n|\W|\s|$)/gi);
             var matches = str.match(find);
             if(matches !== null) {
-                results["browserPage"] = results["browserPage"] || { count: 0, values: [], visibility: 0 };
+                results["browserPage"] = results["browserPage"] || { count: 0, values: [] };
                 results["browserPage"].count++;
                 for(var i = 0; i < matches.length; i++){
                     results["browserPage"].values[matches[i]] = results["browserPage"].values[matches[i]] || { count: 0 };
@@ -85,7 +85,10 @@ void function () {
                 }
 
                 //checks if is visible on page
-                results["browserPage"].visibility = (results["browserPage"].visibility === 0) ? isVisible(element) : 1;
+                results["visibility"] = results["visibility"] || {value:"false"};
+                if(results["visibility"].value === "false"){
+                    results["visibility"].value = isVisible(element).toString();
+                }
 
             }
         }
