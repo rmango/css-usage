@@ -12,55 +12,6 @@ void function() {
         if(window.location.href.indexOf("microsoft.com") !== -1 || window.location.href.indexOf("forum") !== -1){
             return results;
         }
-        function isVisible(element) {
-            //checks if width/height = 0 and left/top < 0
-            var rect = element.getBoundingClientRect();
-            if(rect !== null) {
-                var box = rect;
-                var docEl = document.documentElement;
-                var scrollTop = docEl.scrollTop;
-                var scrollLeft = docEl.scrollLeft;
-                var clientTop = docEl.clientTop;
-                var clientLeft = docEl.clientLeft;
-                var width = box.width;
-                var height = box.height;
-                var top = box.top + scrollTop - clientTop;
-                var left = box.left + scrollLeft - clientLeft;
-                var bottom = top + height;
-                var right = left + width;
-                if (width == 0 || height == 0 || bottom <= 0 || right <= 0) {
-                    return false;
-                }
-            }          
-            
-            //checks for visibility with computed style
-            var elStyle = getComputedStyle(element);
-            if(elStyle.display === "none"){
-                return false;
-            } 
-            else if(elStyle.opacity < 0.1){
-                return false;
-            } 
-            else if(elStyle.transform.includes(" 0,") || elStyle.getPropertyValue("transform").includes(" 0)")){
-                return false;
-            } 
-            else if(elStyle.transform.scaleX == 0 || elStyle.transform.scaleY == 0){
-                return false;
-            }
-            else if(elStyle.visibility != "visible"){
-                return false;
-            }
-
-            // if text is within an iframe that does not appear
-            var elAbove = element;
-            do{
-                if(elAbove.nodeName === "IFRAME" || !!element.closest("IFRAME")){
-                   return false;
-                }
-                elAbove = elAbove.parentElement;
-            } while(!!elAbove);
-            return true;
-        }
         
         //tests for browser download urls
         var browsers = [{co:"google", browser:"chrome", name:"Chrome", re:null}, {co:"microsoft", browser:"(internet-explorer|\\Wie)", name:"IE", re:null}, 
