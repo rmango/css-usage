@@ -32,7 +32,7 @@ void function() {
                     //checks if is visible on page
                     results["visibility"] = results["visibility"] || {value:"false"};
                     if(isVisible(element)){
-                        results["visibility"] = true;
+                        results["visibility"] = "true";
                     }
                 }
             }
