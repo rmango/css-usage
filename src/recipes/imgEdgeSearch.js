@@ -24,15 +24,8 @@ void function () {
             for(var i = 0; i < browsers.length; i++){
                 if(element.getAttribute("alt") !== null){
                     if(browsers[i].str.test(element.getAttribute("alt").toString())){
-                        var altMatch = element.getAttribute("alt").match(browsers[i].str);
-
                         results[browsers[i].name] = results[browsers[i].name] || { count: 0, values: [] };
                         results[browsers[i].name].count++;
-
-                        for(var j = 0; j < altMatch.length; j++){
-                            results[browsers[i].name].values[altMatch[j]] = results[browsers[i].name].values[altMatch[j]] || { count: 0 };
-                            results[browsers[i].name].values[altMatch[j]].count++;
-                        }
 
                         //checks if visible on page
                         results["visibility"] = results["visibility"] || {value:0};
