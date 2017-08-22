@@ -3,17 +3,10 @@ function isVisible(element) {
     var rect = element.getBoundingClientRect();
     if (rect !== null) {
         var box = rect;
-        var docEl = document.documentElement;
-        var scrollTop = docEl.scrollTop;
-        var scrollLeft = docEl.scrollLeft;
-        var clientTop = docEl.clientTop;
-        var clientLeft = docEl.clientLeft;
         var width = box.width;
         var height = box.height;
-        var top = box.top + scrollTop - clientTop;
-        var left = box.left + scrollLeft - clientLeft;
-        var bottom = top + height;
-        var right = left + width;
+        var bottom = box.bottom;
+        var right = box.right;
         if (width == 0 || height == 0 || bottom <= 0 || right <= 0) {
             return false;
         }

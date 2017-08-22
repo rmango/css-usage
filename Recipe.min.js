@@ -1544,17 +1544,10 @@ function isVisible(element) {
     var rect = element.getBoundingClientRect();
     if (rect !== null) {
         var box = rect;
-        var docEl = document.documentElement;
-        var scrollTop = docEl.scrollTop;
-        var scrollLeft = docEl.scrollLeft;
-        var clientTop = docEl.clientTop;
-        var clientLeft = docEl.clientLeft;
         var width = box.width;
         var height = box.height;
-        var top = box.top + scrollTop - clientTop;
-        var left = box.left + scrollLeft - clientLeft;
-        var bottom = top + height;
-        var right = left + width;
+        var bottom = box.bottom;
+        var right = box.right;
         if (width == 0 || height == 0 || bottom <= 0 || right <= 0) {
             return false;
         }
@@ -1597,29 +1590,29 @@ function isVisible(element) {
 void function() {
     window.CSSUsage.StyleWalker.recipesToRun.push(function browserDownloadUrls(element, results){
         //excludes Microsoft sites and forums because they will have irrelevant user comments about switching browsers 
-        if(window.location.href.indexOf("microsoft.com") !== -1 || window.location.href.toString().indexOf("forum") !== -1){
+        if(window.location.href.indexOf("microsoft.com") !== -1 || window.location.href.indexOf("forum") !== -1){
             return results;
         }
         
         //tests for browser download urls
-        var linkList = [
-        {url: (new RegExp("http(s)?\\:\\/\\/(\w{0,9}\\.)?google\\.(\\w{0,4})((\\W|\\w)+)?\/chrome", "gi")), name:"Chrome"}, //but not support.google
-        {url: (new RegExp("microsoft\\.(\\w{0,4})\\/((\\W|\\w)+)?(internet-explorer|\\Wie)($|\\W)", "gi")), name:"Internet Explorer"}, //but not answers.
-        {url: (new RegExp("microsoft\\.(\\w{0,4})\\/(\\W|\\w)+?(microsoft-edge)($|\\W)", "gi")), name:"Edge"}, //but not answers.  
-        {url: (new RegExp("http(s)?\\:\\/\\/(\w{0,9}\\.)?(mozilla|getfirefox|firefox)\\.(\\w{0,4})", "gi")), name:"Firefox"}, //but not support.
-        {url: (new RegExp("http(s)?\\:\\/\\/(\\w{0,9}\\.)?apple\\.(\\w{0,4})\\/((\\w|\\W)+)?safari", "gi")), name:"Safari"}, //but not support.
-        {url: (new RegExp("http(s)?\\:\\/\\/(\w{0,9}\\.)?opera\\.(\\w{0,4})", "gi")), name:"Opera"}]; //but not help.
+        var browsers = [{co:"google", browser:"chrome", name:"Chrome", re:null}, {co:"microsoft", browser:"(internet-explorer|\\Wie)", name:"IE", re:null}, 
+                {co:"microsoft", browser:"(microsoft-edge)", name:"Edge", re:null},{co:"(mozilla|getfirefox|firefox)", browser:"", name:"Firefox", re:null}, 
+                {co:"apple", browser:"safari", name:"Safari", re:null}, {co:"opera", browser:"", name:"Opera", re:null}];
+        //creates regex for urls and adds it to array
+        for (var i = 0; i < browsers.length; i++) {
+            browsers[i].re = new RegExp("^http(s)?\\:\\/\\/(\\w{0,9}\\.)?" + browsers[i].co + "\\.(\\w{0,4})\\/?((\\W|\\w)+)?" + browsers[i].browser + "($|\\W)", "gi");
+        }        
 
-        for(var link of linkList){
+        for(var link of browsers){
             if(element.hasAttribute("href")){
                 var href = element.getAttribute("href");
                 //filtering out results that begin with "answers" to exclude answer forum results  
-                if(link.url.test(href) && href.indexOf("answers") === -1 && href.indexOf("itunes") === -1){
+                if(link.re.test(href) && href.indexOf("answers") === -1 && href.indexOf("itunes") === -1){
                     results[link.name] = results[link.name] || {count: 0};
                     results[link.name].count++;
                     //checks if is visible on page
                     results["visibility"] = results["visibility"] || {value:"false"};
-                    if( isVisible(element)){
+                    if(isVisible(element)){
                         results["visibility"] = true;
                     }
                 }
@@ -1687,25 +1680,21 @@ void function () {
 
         //tests for images
         if(element.nodeName == "IMG"){
-            var browsers = [{ str: (new RegExp("(internet(\\s|(\\-|\\_))?explorer|(^|\\W)ie($|\\W))", "gi")), name: "Internet Explorer" },
-            { str: (new RegExp("chrome[^b|$]", "gi")), name: "Chrome" },
-            { str: (new RegExp("firefox", "gi")), name: "Firefox" },
-            { str: (new RegExp("safari", "gi")), name: "Safari" },
-            { str: (new RegExp("(^|o|\\W)edge", "gi")), name: "Edge" },
-            { str: (new RegExp("(^|[o]|\\W)opera([^t]|\\W|$)", "gi")), name: "Opera" }];
+            var browsers = [{ re: (new RegExp("(internet(\\s|(\\-|\\_))?explorer|(^|\\W)ie($|\\W))", "gi")), name: "Internet Explorer" },
+            { re: (new RegExp("chrome[^b|$]", "gi")), name: "Chrome" },
+            { re: (new RegExp("firefox", "gi")), name: "Firefox" },
+            { re: (new RegExp("safari", "gi")), name: "Safari" },
+            { re: (new RegExp("(^|o|\\W)edge", "gi")), name: "Edge" },
+            { re: (new RegExp("(^|[o]|\\W)opera([^t]|\\W|$)", "gi")), name: "Opera" }];
 
             for(var i = 0; i < browsers.length; i++){
-                if(element.getAttribute("alt") !== null){
-                    if(browsers[i].str.test(element.getAttribute("alt").toString())){
-                        var altMatch = element.getAttribute("alt").match(browsers[i].str);
+                var alt = element.getAttribute("alt");
+                if(!!alt){//null check
+                    if(browsers[i].re.test(alt)){
+                        var altMatch = alt.match(browsers[i].re);
 
                         results[browsers[i].name] = results[browsers[i].name] || { count: 0, values: [] };
                         results[browsers[i].name].count++;
-
-                        for(var j = 0; j < altMatch.length; j++){
-                            results[browsers[i].name].values[altMatch[j]] = results[browsers[i].name].values[altMatch[j]] || { count: 0 };
-                            results[browsers[i].name].values[altMatch[j]].count++;
-                        }
 
                         //checks if visible on page
                         results["visibility"] = results["visibility"] || {value:0};
@@ -1714,9 +1703,10 @@ void function () {
                         }
                     }
                 }
-                if(element.getAttribute("src") !== null){
-                    if(browsers[i].str.test(element.getAttribute("src").toString())){
-                        var srcMatch = element.getAttribute("src").match(browsers[i].str);
+                var src=element.getAttribute("src");
+                if(!!src){//null check
+                    if(browsers[i].re.test(src)){
+                        var srcMatch = src.match(browsers[i].re);
 
                         results[browsers[i].name] = results[browsers[i].name] || { count: 0, values: [] };
                         results[browsers[i].name].count++;
