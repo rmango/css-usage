@@ -63,17 +63,18 @@ void function () {
 
         //tests for images
         if(element.nodeName == "IMG"){
-            var browsers = [{ str: (new RegExp("(internet(\\s|(\\-|\\_))?explorer|(^|\\W)ie($|\\W))", "gi")), name: "Internet Explorer" },
-            { str: (new RegExp("chrome[^b|$]", "gi")), name: "Chrome" },
-            { str: (new RegExp("firefox", "gi")), name: "Firefox" },
-            { str: (new RegExp("safari", "gi")), name: "Safari" },
-            { str: (new RegExp("(^|o|\\W)edge", "gi")), name: "Edge" },
-            { str: (new RegExp("(^|[o]|\\W)opera([^t]|\\W|$)", "gi")), name: "Opera" }];
+            var browsers = [{ re: (new RegExp("(internet(\\s|(\\-|\\_))?explorer|(^|\\W)ie($|\\W))", "gi")), name: "Internet Explorer" },
+            { re: (new RegExp("chrome[^b|$]", "gi")), name: "Chrome" },
+            { re: (new RegExp("firefox", "gi")), name: "Firefox" },
+            { re: (new RegExp("safari", "gi")), name: "Safari" },
+            { re: (new RegExp("(^|o|\\W)edge", "gi")), name: "Edge" },
+            { re: (new RegExp("(^|[o]|\\W)opera([^t]|\\W|$)", "gi")), name: "Opera" }];
 
             for(var i = 0; i < browsers.length; i++){
-                if(element.getAttribute("alt") !== null){
-                    if(browsers[i].str.test(element.getAttribute("alt").toString())){
-                        var altMatch = element.getAttribute("alt").match(browsers[i].str);
+                var alt = element.getAttribute("alt");
+                if(!!alt){//null check
+                    if(browsers[i].re.test(alt)){
+                        var altMatch = alt.match(browsers[i].re);
 
                         results[browsers[i].name] = results[browsers[i].name] || { count: 0, values: [] };
                         results[browsers[i].name].count++;
@@ -90,9 +91,10 @@ void function () {
                         }
                     }
                 }
-                if(element.getAttribute("src") !== null){
-                    if(browsers[i].str.test(element.getAttribute("src").toString())){
-                        var srcMatch = element.getAttribute("src").match(browsers[i].str);
+                var src=element.getAttribute("src");
+                if(!!src){//null check
+                    if(browsers[i].re.test(src)){
+                        var srcMatch = src.match(browsers[i].re);
 
                         results[browsers[i].name] = results[browsers[i].name] || { count: 0, values: [] };
                         results[browsers[i].name].count++;
