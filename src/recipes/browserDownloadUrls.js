@@ -44,7 +44,7 @@ void function() {
             else if(elStyle.transform.includes(" 0,") || elStyle.getPropertyValue("transform").includes(" 0)")){
                 return false;
             } 
-            else if(elStyle.scale.includes(" 0,") || elStyle.scale.includes(" 0)") || elStyle.scaleX == 0 || elStyle.scaleY == 0){
+            else if(elStyle.transform.scaleX == 0 || elStyle.transform.scaleY == 0){
                 return false;
             }
             else if(elStyle.visibility != "visible"){
@@ -63,21 +63,19 @@ void function() {
         }
         
         //tests for browser download urls
-        var linkList = [
-        {url: (new RegExp("http(s)?\\:\\/\\/(\\w{0,9}\\.)?google\\.(\\w{0,4})((\\W|\\w)+)?\/chrome", "gi")), name:"Chrome"},
-        {url: (new RegExp("http(s)?\\:\\/\\/(\\w{0,9}\\.)?microsoft\\.(\\w{0,4})\\/((\\W|\\w)+)?(internet-explorer|\\Wie)($|\\W)", "gi")), name:"Internet Explorer"},
-        {url: (new RegExp("http(s)?\\:\\/\\/(\\w{0,9}\\.)?microsoft\\.(\\w{0,4})\\/(\\W|\\w)+?(microsoft-edge)($|\\W)", "gi")), name:"Edge"},
-        {url: (new RegExp("http(s)?\\:\\/\\/(\\w{0,9}\\.)?(mozilla|getfirefox|firefox)\\.(\\w{0,4})", "gi")), name:"Firefox"}, 
-        {url: (new RegExp("http(s)?\\:\\/\\/(\\w{0,9}\\.)?apple\\.(\\w{0,4})\\/((\\w|\\W)+)?safari", "gi")), name:"Safari"},
-        {url: (new RegExp("http(s)?\\:\\/\\/(\\w{0,9}\\.)?opera\\.(\\w{0,4})", "gi")), name:"Opera"}]; 
+        var browsers = [{co:"google", browser:"chrome", name:"Chrome", re:null}, {co:"microsoft", browser:"(internet-explorer|\\Wie)", name:"IE", re:null}, 
+                {co:"microsoft", browser:"(microsoft-edge)", name:"Edge", re:null},{co:"(mozilla|getfirefox|firefox)", browser:"", name:"Firefox", re:null}, 
+                {co:"apple", browser:"safari", name:"Safari", re:null}, {co:"opera", browser:"", name:"Opera", re:null}];
+        //creates regex for urls and adds it to array
+        for (var i = 0; i < browsers.length; i++) {
+            browsers[i].re = new RegExp("http(s)?\\:\\/\\/(\\w{0,9}\\.)?" + browsers[i].co + "\\.(\\w{0,4})\\/?((\\W|\\w)+)?" + browsers[i].browser + "($|\\W)", "gi");
+        }        
 
-        
-
-        for(var link of linkList){
+        for(var link of browsers){
             if(element.hasAttribute("href")){
                 var href = element.getAttribute("href");
                 //filtering out results that begin with "answers" to exclude answer forum results  
-                if(link.url.test(href) && href.indexOf("answers") === -1 && href.indexOf("itunes") === -1){
+                if(link.re.test(href) && href.indexOf("answers") === -1 && href.indexOf("itunes") === -1){
                     results[link.name] = results[link.name] || {count: 0};
                     results[link.name].count++;
                     //checks if is visible on page
