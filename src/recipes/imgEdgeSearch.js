@@ -28,11 +28,9 @@ void function () {
                         var altMatch = alt.match(browsers[i].re);
 
                         results[browsers[i].name] = results[browsers[i].name] || { count: 0, values: [] };
-                        results[browsers[i].name].count++;
-
+                        results[browsers[i].name].count++;                        
                     }
                 }
-            }
                 var src=element.getAttribute("src");
                 if(!!src){//null check
                     if(browsers[i].re.test(src)){
