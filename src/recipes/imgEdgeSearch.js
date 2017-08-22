@@ -30,13 +30,9 @@ void function () {
                         results[browsers[i].name] = results[browsers[i].name] || { count: 0, values: [] };
                         results[browsers[i].name].count++;
 
-                        //checks if visible on page
-                        results["visibility"] = results["visibility"] || {value:0};
-                        if(results["visibility"].value === 0){
-                            results["visibility"].value = isVisible(element);
-                        }
                     }
                 }
+            }
                 var src=element.getAttribute("src");
                 if(!!src){//null check
                     if(browsers[i].re.test(src)){
