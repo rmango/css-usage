@@ -14,7 +14,7 @@ void function () {
             return results;
         }
 
-        if(element.nodeName !== "HTML" && element.nodeName !== "SCRIPT" && element.nodeName !== "BODY"){
+        if(element.nodeName !== "HTML" && element.nodeName !== "SCRIPT" && element.nodeName !== "BODY" && element.nodeName !== "STYLE" && element.nodeName !== "OBJECT" && element.nodeName !== "EMBED" && element.nodeName !== "APPLET"){
             var str = element.cloneNode(true);
             if(str.hasChildNodes()){
                 var childs = str.children !== undefined ? str.children : str.childNodes;
