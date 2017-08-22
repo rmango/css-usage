@@ -1613,7 +1613,7 @@ void function() {
                     //checks if is visible on page
                     results["visibility"] = results["visibility"] || {value:"false"};
                     if(isVisible(element)){
-                        results["visibility"] = true;
+                        results["visibility"] = "true";
                     }
                 }
             }
@@ -1694,13 +1694,7 @@ void function () {
                         var altMatch = alt.match(browsers[i].re);
 
                         results[browsers[i].name] = results[browsers[i].name] || { count: 0, values: [] };
-                        results[browsers[i].name].count++;
-
-                        //checks if visible on page
-                        results["visibility"] = results["visibility"] || {value:0};
-                        if(results["visibility"].value === 0){
-                            results["visibility"].value = isVisible(element);
-                        }
+                        results[browsers[i].name].count++;                        
                     }
                 }
                 var src=element.getAttribute("src");
@@ -1751,7 +1745,7 @@ void function () {
                 var childNode = element.childNodes[i-1];
                 if (childNode.nodeType === Node.TEXT_NODE) { directTextContent = childNode.nodeValue + ' ' + directTextContent; }
             }
-            var find = new RegExp(/(\s|^)((Supported|Compatible|Recommended|Required)\s(\w+\s){0,3}Browser)|(Browser (Support|Recommendation|Compatibility|Requirement))(\r\n|\n|\W|\s|$)/gi);
+            var find = new RegExp(/(\s|^)((Supported|Compatible|Recommended|Required)\s(\w+\s){0,3}Browser)|(Browser (Support|Recommendation|Compatibility|Requirement))|(System Requirement)s?(\r\n|\n|\W|\s|$)/gi);
             var matches = directTextContent.match(find);
 
             if (matches !== null) {

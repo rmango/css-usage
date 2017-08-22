@@ -20,7 +20,7 @@ void function () {
                 var childNode = element.childNodes[i-1];
                 if (childNode.nodeType === Node.TEXT_NODE) { directTextContent = childNode.nodeValue + ' ' + directTextContent; }
             }
-            var find = new RegExp(/(\s|^)((Supported|Compatible|Recommended|Required)\s(\w+\s){0,3}Browser)|(Browser (Support|Recommendation|Compatibility|Requirement))(\r\n|\n|\W|\s|$)/gi);
+            var find = new RegExp(/(\s|^)((Supported|Compatible|Recommended|Required)\s(\w+\s){0,3}Browser)|(Browser (Support|Recommendation|Compatibility|Requirement))|(System Requirement)s?(\r\n|\n|\W|\s|$)/gi);
             var matches = directTextContent.match(find);
 
             if (matches !== null) {
