@@ -19,7 +19,7 @@ void function() {
                 {co:"apple", browser:"safari", name:"Safari", re:null}, {co:"opera", browser:"", name:"Opera", re:null}];
         //creates regex for urls and adds it to array
         for (var i = 0; i < browsers.length; i++) {
-            browsers[i].re = new RegExp("http(s)?\\:\\/\\/(\\w{0,9}\\.)?" + browsers[i].co + "\\.(\\w{0,4})\\/?((\\W|\\w)+)?" + browsers[i].browser + "($|\\W)", "gi");
+            browsers[i].re = new RegExp("^http(s)?\\:\\/\\/(\\w{0,9}\\.)?" + browsers[i].co + "\\.(\\w{0,4})\\/?((\\W|\\w)+)?" + browsers[i].browser + "($|\\W)", "gi");
         }        
 
         for(var link of browsers){
