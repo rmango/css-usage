@@ -30,7 +30,7 @@ function isVisible(element) {
     // if text is within an iframe that does not appear
     var elAbove = element;
     do {
-        if (elAbove.nodeName === "IFRAME" || !!element.closest("IFRAME")) {
+        if (elAbove.nodeName === "IFRAME" && !!element.closest("IFRAME")) {
             return false;
         }
         elAbove = elAbove.parentElement;
